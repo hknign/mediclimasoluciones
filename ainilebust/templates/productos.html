@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Mediclimasoluciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #004d99;
+            color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header .logo {
+            height: 50px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .search-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #search {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #filtros {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #listado-productos {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .producto {
+            display: flex;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .producto-imagen {
+            width: 150px;
+            height: auto;
+        }
+
+        .producto-detalles {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .producto-detalles h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .producto-detalles p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .precio {
+            font-weight: bold;
+            color: #004d99;
+        }
+
+        .btn-agregar {
+            background-color: #004d99;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-agregar:hover {
+            background-color: #003366;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #004d99;
+            color: #fff;
+            margin-top: 20px;
+        }
+
+    </style>
+</head><body>
+    <header>
+        <img src="{% static 'imagenes/logo.png' %}" alt="Logo Mediclimasoluciones" class="logo">
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Inicio</a></li>
+                <li><a href="{% url 'mostrar_carrito' %}">Carrito de compras</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <!-- Buscar productos -->
+        <section id="buscar-productos" class="search-section">
+            <input type="text" id="search" placeholder="Buscar...">
+            <select id="filtros">
+                <option value="todos">Todos</option>
+                <option value="categoria1">Categoría 1</option>
+                <option value="categoria2">Categoría 2</option>
+            </select>
+        </section>
+
+        <!-- Listar productos -->
+        <section id="listado-productos">
+            {% for producto in productos %}
+            <div class="producto {% for categoria in producto.categorias %}{{ categoria }} {% endfor %}">
+                <img src="{% static producto.imagen_url %}" alt="{{ producto.nombre }}" class="producto-imagen">
+                <div class="producto-detalles">
+                    <h3>{{ producto.nombre }}</h3>
+                    <p class="precio">Precio: ${{ producto.precio }}</p>
+                    <p>{{ producto.descripcion }}</p>
+                    <button class="btn-agregar">Agregar Producto</button>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Mediclimasoluciones</p>
+    </footer>
+    
+    <script>
+        document.getElementById('search').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const products = document.querySelectorAll('.producto');
+        
+            products.forEach(product => {
+                const productName = product.querySelector('h3').textContent.toLowerCase();
+                product.style.display = productName.includes(searchValue) ? 'flex' : 'none';
+            });
+        });
+        
+        document.getElementById('filtros').addEventListener('change', function() {
+            const filterValue = this.value;
+            const products = document.querySelectorAll('.producto');
+        
+            products.forEach(product => {
+                if (filterValue === 'todos' || product.classList.contains(filterValue)) {
+                    product.style.display = 'flex';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        });
+        
+        document.querySelectorAll('.btn-agregar').forEach(button => {
+            button.addEventListener('click', function() {
+                alert('Producto añadido al carrito');
+            });
+        });
+    </script>
+</body>
+</html>

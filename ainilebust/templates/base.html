@@ -1,0 +1,162 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi Tienda{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos del carrito superpuesto */
+        #carrito-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+            transition: right 0.3s ease-in-out;
+            z-index: 1050;
+            overflow-y: auto;
+        }
+        #carrito-sidebar.abierto {
+            right: 0;
+        }
+        #carrito-sidebar .header {
+            padding: 20px;
+            background-color: #1e8678;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #carrito-sidebar .contenido {
+            padding: 20px;
+        }
+        #carrito-sidebar .producto {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        #carrito-sidebar .producto img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        #carrito-sidebar .producto .info {
+            flex: 1;
+        }
+        #carrito-sidebar .producto .info h5 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+        #carrito-sidebar .producto .info p {
+            margin: 5px 0;
+            color: #666;
+        }
+        #carrito-sidebar .producto .eliminar {
+            cursor: pointer;
+            color: #dc3545;
+        }
+        #carrito-sidebar .footer {
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+        #boton-carrito {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #1e8678;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            z-index: 1060;
+        }
+        #boton-carrito:hover {
+            background-color: #146356;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Botón del carrito -->
+    <button id="boton-carrito">
+        <i class="fas fa-shopping-cart"></i>
+    </button>
+
+    <!-- Sidebar del carrito -->
+    <div id="carrito-sidebar">
+        <div class="header">
+            <h4>Tu Carrito</h4>
+            <button id="cerrar-carrito" class="btn btn-light btn-sm">&times;</button>
+        </div>
+        <div class="contenido">
+            {% if carrito %}
+                {% for id, item in carrito.items %}
+                    <div class="producto" data-id="{{ id }}">
+                        <img src="{{ item.imagen }}" alt="{{ item.nombre }}">
+                        <div class="info">
+                            <h5>{{ item.nombre }}</h5>
+                            <p>${{ item.precio }} x {{ item.cantidad }}</p>
+                        </div>
+                        <button class="eliminar btn btn-sm"><i class="fas fa-trash"></i></button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Tu carrito está vacío.</p>
+            {% endif %}
+        </div>
+        <div class="footer">
+            <h5>Total: ${{ total }}</h5>
+            <a href="{% url 'realizar_presupuesto' %}" class="btn btn-success btn-block">Realizar presupuesto</a>
+        </div>
+    </div>
+
+    <!-- Contenido de la página -->
+    <div class="container mt-5">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Abrir el carrito
+        $('#boton-carrito').click(function(){
+            $('#carrito-sidebar').addClass('abierto');
+        });
+
+        // Cerrar el carrito
+        $('#cerrar-carrito').click(function(){
+            $('#carrito-sidebar').removeClass('abierto');
+        });
+
+        // Eliminar producto del carrito
+        $('.eliminar').click(function(){
+            var producto_id = $(this).closest('.producto').data('id');
+            $.ajax({
+                url: '{% url "eliminar_del_carrito" 0 %}'.replace('/0/', '/' + producto_id + '/'),
+                type: 'GET',
+                success: function(response){
+                    location.reload();
+                }
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

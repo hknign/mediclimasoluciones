@@ -1,0 +1,11 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Presupuesto Enviado{% endblock %}
+
+{% block content %}
+    <div class="alert alert-success" role="alert">
+        ¡Tu presupuesto ha sido enviado exitosamente! Nos pondremos en contacto contigo pronto.
+    </div>
+    <a href="{% url 'home' %}" class="btn btn-primary">Volver al Inicio</a>
+{% endblock %}

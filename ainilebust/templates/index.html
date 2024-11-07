@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediclimasoluciones - Equipos Médicos BIOBASE</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #004d40;
+            padding: 10px 0;
+            color: white;
+            text-align: center;
+        }
+
+        header img {
+            width: 150px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #00695c;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #004d40;
+        }
+        .hero-section {
+            background-image: url('static/imagenes/fondo.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh; 
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            margin-top: -64px;
+            margin-bottom: -64px;
+        }
+
+        .hero-section h1 {
+            font-size: 4em;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .hero-section p {
+            font-size: 1.5em;
+        }
+
+        .btn-primary {
+            background-color: #ff6f00;
+            border-color: #ff6f00;
+        }
+
+        .btn-primary:hover {
+            background-color: #e65100;
+            border-color: #e65100;
+        }
+
+        .section-title {
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .section-title h2 {
+            font-size: 3em;
+            color: #004d40;
+        }
+
+        .card {
+            transition: transform 0.3s;
+            margin-bottom: 30px;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        footer {
+            background-color: #004d40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer .social-logo {
+            width: 40px;
+            margin: 0 10px;
+            transition: transform 0.3s;
+        }
+
+        footer .social-logo:hover {
+            transform: scale(1.2);
+        }
+        h6{
+            margin-bottom: 300px;
+        }
+        .slogan{
+            margin-bottom: 100px;
+
+        }
+        .logo {
+            width: 75px; 
+            height: 75px; 
+            border-radius: 50%; 
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+        .Carrito {
+            position: absolute;
+            top: 95px;
+            left: 0;
+            margin: 0; 
+
+        }
+
+        li{
+            margin-left: 20px;
+        }
+
+
+    </style>
+</head><body>
+    <header>
+        <img src="{% static 'imagenes/logo.png' %}" alt="Logo Mediclimasoluciones" class="logo">
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="" class="Carrito">🛒 Carrito</a></li>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="{% url 'productos' %}">Productos</a></li>
+            <li><a href="{% url 'servicios' %}">Servicios</a></li>
+            <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
+            <li><a href="{% url 'contacto' %}">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero-section" id="inicio">
+        <div>
+            <h6>Equipos Médicos BIOBASE</h6>
+            <p class="slogan">Venta, instalación y servicio técnico autorizado</p>
+            <a href="{% url 'productos' %}" class="btn btn-primary btn-lg">Nuestros Productos</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Mediclimasoluciones. Todos los derechos reservados.</p>
+        <div>
+            <a href="https://facebook.com"><img src="{% static 'imagenes/facebook.png' %}" alt="Facebook" class="social-logo"></a>
+            <a href="https://whatsapp.com"><img src="{% static 'imagenes/WhatsApp.png' %}" alt="WhatsApp" class="social-logo"></a>
+            <a href="https://instagram.com"><img src="{% static 'imagenes/logo-instagram-1080p.png' %}" alt="Instagram" class="social-logo"></a>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

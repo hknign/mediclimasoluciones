@@ -1,0 +1,14 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Realizar Presupuesto{% endblock %}
+
+{% block content %}
+    <h2>Realizar Presupuesto</h2>
+    <p>Total a presupuestar: ${{ total }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Enviar Presupuesto</button>
+    </form>
+{% endblock %}

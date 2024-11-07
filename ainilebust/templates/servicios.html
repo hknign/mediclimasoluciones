@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios - Mediclimasoluciones</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #004d99;
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .servicio-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .servicio-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img-top {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .btn-primary {
+            background-color: #004d99;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #003366;
+            color: #fff;
+        }
+
+        #servicios {
+            background: #eaf3ff;
+            padding: 50px 15px;
+            border-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .card-img-top {
+                height: 150px;
+            }
+        }
+        
+        header {
+            background-color: #004d99;
+            color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header .logo {
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="images/logo.png" alt="Logo Mediclimasoluciones" class="logo">
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="carrito.html">Carrito de compras</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section id="servicios" class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Nuestros Servicios</h2>
+            <p class="section-description">Ofrecemos soluciones integrales para todas tus necesidades de climatización y soporte técnico.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card servicio-card">
+                    <img src="imagenes/aire-acondicionado.jpg" class="card-img-top" alt="Instalación">
+                    <div class="card-body">
+                        <h5 class="card-title">Instalación</h5>
+                        <p class="card-text">Realizamos instalaciones profesionales de equipos de aire acondicionado, garantizando un funcionamiento óptimo.</p>
+                        <a href="#" class="btn btn-primary">Más información</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card servicio-card">
+                    <img src="imagenes/servicio2.jpg" class="card-img-top" alt="Mantenimiento">
+                    <div class="card-body">
+                        <h5 class="card-title">Mantenimiento</h5>
+                        <p class="card-text">Servicios de mantenimiento preventivo y correctivo para alargar la vida útil de tus equipos.</p>
+                        <a href="#" class="btn btn-primary">Más información</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card servicio-card">
+                    <img src="imagenes/servicio3.jpg" class="card-img-top" alt="Soporte Técnico">
+                    <div class="card-body">
+                        <h5 class="card-title">Soporte Técnico</h5>
+                        <p class="card-text">Asistencia técnica especializada para resolver cualquier problema o consulta que tengas.</p>
+                        <a href="#" class="btn btn-primary">Más información</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>document.getElementById('search').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const servicios = document.querySelectorAll('.servicio');
+    
+        servicios.forEach(servicio => {
+            const servicioName = servicio.querySelector('h3').textContent.toLowerCase();
+            servicio.style.display = servicioName.includes(searchValue) ? 'flex' : 'none';
+        });
+    });
+    
+    document.getElementById('filtros').addEventListener('change', function() {
+        const filterValue = this.value;
+        const servicios = document.querySelectorAll('.servicio');
+    
+        servicios.forEach(servicio => {
+            if (filterValue === 'todos' || servicio.classList.contains(filterValue)) {
+                servicio.style.display = 'flex';
+            } else {
+                servicio.style.display = 'none';
+            }
+        });
+    });
+    
+    document.querySelectorAll('.btn-agregar').forEach(button => {
+        button.addEventListener('click', function() {
+            alert('Producto añadido al carrito');
+        });
+    });
+    </script>
+</body>
+</html>
