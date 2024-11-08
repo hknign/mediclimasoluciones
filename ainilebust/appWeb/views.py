@@ -8,8 +8,11 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import Producto
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
 from .forms import PresupuestoForm
+from django.utils.translation import activate
+import calendar
+from datetime import date, datetime
+from babel.dates import format_date
 
 def register_view(request):
     if request.method == 'POST':
@@ -140,8 +143,6 @@ def realizar_presupuesto(request):
         form = PresupuestoForm(request.POST)
         if form.is_valid():
             # Procesar el presupuesto aquí (calcular mano de obra, enviar correo, etc.)
-            # Por ejemplo, podrías enviar un correo con los detalles del presupuesto
-            # Luego, limpiar el carrito
             request.session['carrito'] = {}
             return redirect('presupuesto_exitoso')
     else:
@@ -152,6 +153,33 @@ def realizar_presupuesto(request):
 def presupuesto_exitoso(request):
     return render(request, 'presupuesto_exitoso.html')
 
+def generar_calendario():
+    # Activa el idioma español
+    activate('es')
 
-def horarios(request):
-    return render(request, 'horarios.html')
+    # Genera el calendario anual
+    calendario = {}
+    for mes in range(1, 13):
+        nombre_mes = format_date(datetime(2024, mes, 1), "MMMM", locale='es')
+        dias_mes = calendar.monthcalendar(date.today().year, mes)
+        days = []
+        for week in dias_mes:
+            for dia in week:
+                if dia == 0:
+                    continue
+                try:
+                    fecha = datetime(date.today().year, mes, dia)
+                except ValueError:
+                    continue
+
+                estado = "disponible" if fecha.weekday() in [0, 1, 2] else "ocupado"
+                days.append({"fecha": fecha, "estado": estado})
+        
+        calendario[nombre_mes.capitalize()] = days
+
+    return calendario
+
+def calendario_anual(request):
+    calendario = generar_calendario()
+    context = {'calendario': calendario}
+    return render(request, 'calendario.html', context)

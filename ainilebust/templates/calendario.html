@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario Anual de Disponibilidad</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            background-color: #004d99;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .year-calendar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .month {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .month-header {
+            background-color: #004d99;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 10px;
+            gap: 5px;
+            text-align: center;
+        }
+
+        .day {
+            border-radius: 5px;
+            padding: 8px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+            cursor: pointer;
+            color: white;
+            position: relative;
+        }
+
+        .day.default {
+            background-color: #e0e0e0;
+            color: #666;
+        }
+
+        .day.available {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .day.unavailable {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .day span {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .day .estado {
+            display: none;
+            position: absolute;
+            bottom: 5px;
+            font-size: 0.8em;
+        }
+
+        .day.show-estado .estado {
+            display: block;
+        }
+
+        .btn-back {
+            margin-top: 20px;
+            background-color: #004d99;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #002d5a;
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 15px;
+            background-color: #004d99;
+            color: #fff;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <header>Calendario Anual de Disponibilidad</header>
+
+    <div class="year-calendar">
+        {% for month, days in calendario.items %}
+        <div class="month">
+            <div class="month-header">{{ month }}</div>
+            <div class="days-grid">
+                <!-- Nombres de los días de la semana en español -->
+                <div>Lun</div>
+                <div>Mar</div>
+                <div>Mié</div>
+                <div>Jue</div>
+                <div>Vie</div>
+                <div>Sáb</div>
+                <div>Dom</div>
+                
+                {% for day in days %}
+                <div class="day default" onclick="toggleEstado(this)">
+                    <span>{{ day.fecha.day }}</span>
+                    <div class="estado">No se ha añadido horario disponible</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'index' %}" class="btn-back">Volver al inicio</a>
+
+    <footer>
+        &copy; 2024 Mediclimasoluciones
+    </footer>
+
+    <script>
+        function toggleEstado(dayElement) {
+            // Alterna la visualización del estado en cada día
+            dayElement.classList.toggle('show-estado');
+        }
+    </script>
+</body>
+</html>
+

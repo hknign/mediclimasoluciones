@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from appWeb.views import  register_view, login_view,index_view, productos,servicios,sobre_nosotros,contacto, agregar_al_carrito, eliminar_del_carrito, mostrar_carrito,realizar_presupuesto,presupuesto_exitoso, horarios
+from appWeb.views import  register_view, login_view,index_view, productos,servicios,sobre_nosotros,contacto, agregar_al_carrito, eliminar_del_carrito, mostrar_carrito,realizar_presupuesto,presupuesto_exitoso, calendario_anual
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
@@ -33,7 +33,7 @@ urlpatterns = [
     path('carrito/', mostrar_carrito, name='mostrar_carrito'),
     path('realizar-presupuesto/', realizar_presupuesto, name='realizar_presupuesto'),
     path('presupuesto-exitoso/', presupuesto_exitoso, name='presupuesto_exitoso'),
-    path('horarios/',horarios, name='horarios'),
+    path('horarios/',calendario_anual, name='horarios'),
 
 
 
