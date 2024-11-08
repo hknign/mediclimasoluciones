@@ -151,3 +151,7 @@ def realizar_presupuesto(request):
 
 def presupuesto_exitoso(request):
     return render(request, 'presupuesto_exitoso.html')
+
+
+def horarios(request):
+    return render(request, 'horarios.html')
