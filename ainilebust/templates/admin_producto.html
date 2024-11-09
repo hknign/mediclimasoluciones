@@ -80,6 +80,7 @@
             align-items: center;
             text-align: center;
             padding: 20px;
+            position: relative;
         }
 
         .producto-imagen {
@@ -109,7 +110,7 @@
             margin-bottom: 15px;
         }
 
-        .btn-agregar {
+        .btn-agregar, .btn-editar, .btn-eliminar {
             background-color: transparent;
             color: #a8e1ff;
             border: 1px solid #a8e1ff;
@@ -117,12 +118,32 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease, color 0.3s ease;
+            margin-top: 10px;
         }
 
-        .btn-agregar:hover {
+        .btn-agregar:hover, .btn-editar:hover, .btn-eliminar:hover {
             background-color: #a8e1ff;
             color: #004d99;
         }
+
+        .btn-eliminar {
+            position: absolute;
+            top: 10px; 
+            right: 10px; 
+            background: url("{% static 'imagenes/delete.png' %}") no-repeat center;
+            background-size: 20px 20px;
+            width: 30px;
+            height: 30px;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-eliminar:hover {
+            transform: scale(1.1); 
+        }
+
 
         footer {
             text-align: center;
@@ -139,7 +160,6 @@
         <nav>
             <ul>
                 <li><a href="{% url 'index' %}">Inicio</a></li>
-                <li><a href="{% url 'mostrar_carrito' %}">Carrito de compras</a></li>
             </ul>
         </nav>
     </header>
@@ -152,21 +172,31 @@
                 <option value="categoria1">Categoría 1</option>
                 <option value="categoria2">Categoría 2</option>
             </select>
+            <a class="btn-agregar" href="{% url 'agregar_producto' %}">Agregar Producto</a>
         </section>
 
         <!-- Listar productos -->
         <section id="listado-productos">
             {% for producto in productos %}
             <div class="producto {% for categoria in producto.categorias %}{{ categoria }} {% endfor %}">
-                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="producto-imagen">
+                <img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}{% static 'imagenes/default.png' %}{% endif %}" alt="{{ producto.nombre }}" class="producto-imagen">
+
                 <div class="producto-detalles">
                     <h3>{{ producto.nombre }}</h3>
                     <p>{{ producto.descripcion }}</p>
                     <p class="precio">Precio: ${{ producto.precio }}</p>
-                    <form action="{% url 'agregar_al_carrito' producto.id %}" method="post">
+                    <a class="btn-editar" href="{% url 'editar_producto' producto.id %}">Editar</a>
+
+                    <form action="{% url 'eliminar_producto' producto.id %}" method="post" class="btn-eliminar-form" onsubmit="return confirmarEliminacion();">
                         {% csrf_token %}
-                        <button type="submit" class="btn-agregar">Agregar al Carrito</button>
+                        <button type="submit" class="btn-eliminar"></button>
                     </form>
+                    
+                    <script>
+                        function confirmarEliminacion() {
+                            return confirm("¿Estás seguro de que deseas eliminar este producto?");
+                        }
+                    </script>
                 </div>
             </div>
             {% endfor %}

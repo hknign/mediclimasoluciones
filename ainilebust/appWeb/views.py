@@ -13,6 +13,12 @@ from django.utils.translation import activate
 import calendar
 from datetime import date, datetime
 from babel.dates import format_date
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
+from .models import Producto
+from .forms import ProductoForm
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 
 def register_view(request):
     if request.method == 'POST':
@@ -49,8 +55,7 @@ def login_view(request):
 def index_view(request):
     return render(request,'index.html')
 
-def productos(request):
-    return render(request,'productos.html')
+
 
 def servicios(request):
     return render(request,'servicios.html')
@@ -183,3 +188,45 @@ def calendario_anual(request):
     calendario = generar_calendario()
     context = {'calendario': calendario}
     return render(request, 'calendario.html', context)
+
+
+def prueba(request):
+    productos = Producto.objects.all()
+    return render(request,'admin_producto.html', {'productos': productos})
+
+class ProductoCreateView(CreateView):
+    model = Producto
+    form_class = ProductoForm
+    template_name = 'agregar_producto.html'
+    success_url = reverse_lazy('index')
+
+
+def productos(request):
+    productos = Producto.objects.all()
+    return render(request, 'productos.html', {'productos': productos})
+
+def agregar_producto(request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = ProductoForm()
+    return render(request, 'agregar_producto.html', {'form': form})
+
+def editar_producto(request, id):
+    return render(request,'editar_producto.html')
+
+
+def eliminar_producto(request, id):
+    # Verificar si es una solicitud POST (para confirmar la eliminación)
+    if request.method == 'POST':
+        # Obtener el producto o retornar un 404 si no existe
+        producto = get_object_or_404(Producto, id=id)
+        producto.delete()  # Eliminar el producto
+        messages.success(request, 'Producto eliminado exitosamente.')
+        return redirect('index')  # Redirigir al índice o lista de productos
+    
+    # Si no es una solicitud POST, redirigir a la lista de productos
+    return redirect('index')
