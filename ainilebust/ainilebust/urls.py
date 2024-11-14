@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from appWeb.views import  register_view, login_view,index_view, productos,servicios,sobre_nosotros,contacto, agregar_al_carrito, eliminar_del_carrito, mostrar_carrito,realizar_presupuesto,presupuesto_exitoso, calendario_anual, agregar_producto, editar_producto
 from django.contrib.auth.views import LogoutView
-from appWeb.views import prueba, ProductoCreateView, eliminar_producto
+from appWeb.views import prueba, ProductoCreateView, eliminar_producto, admin_dashboard, user_dashboard
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -41,7 +41,9 @@ urlpatterns = [
     path('agregar-producto/', ProductoCreateView.as_view(), name='agregar_producto'),
     path('editar_producto/<int:id>/', editar_producto, name='editar_producto'),
     path('eliminar_producto/<int:id>/',eliminar_producto,name='eliminar_producto'),
-    path('prueba/',prueba, name='prueba')
+    path('prueba/',prueba, name='prueba'),
+    path('admin-dashboard/',admin_dashboard, name='admin_dashboard'),
+    path('user-dashboard/',user_dashboard, name='user_dashboard')
 
 
 

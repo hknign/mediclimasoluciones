@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard del Administrador</title>
+
+    <style>
+        button {
+            border: none;
+            color: white;
+            background-color: #4CAF50;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>Dashboard del Administrador</h1>
+
+<!-- Muestra los datos del usuario -->
+<div>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+    <p><strong>Nombre:</strong> {{ user.first_name }}</p>
+    <p><strong>Apellido:</strong> {{ user.last_name }}</p>
+
+    <button onclick="showEditForm()">Editar Información</button>
+</div>
+
+<!-- Formulario de edición (oculto inicialmente) -->
+<div id="editForm" style="display: none;">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" onclick="return confirm('¿Estás seguro de que deseas editar tus datos?');">Confirmar Edición</button>
+        <button type="button" onclick="hideEditForm()">Cancelar</button>
+    </form>
+</div>
+
+<!-- Botón para ir a la página principal -->
+<div style="margin-top: 20px;">
+    <a href="{% url 'index' %}">
+        <button style="width: 100%; padding: 10px; font-size: 18px;">Ir al Home</button>
+    </a>
+</div>
+
+<!-- Botón de cerrar sesión -->
+<div style="margin-top: 10px;">
+    <a href="{% url 'logout' %}">
+        <button style="width: 100%; padding: 10px; font-size: 18px;">Cerrar Sesión</button>
+    </a>
+</div>
+
+<script>
+    function showEditForm() {
+        document.getElementById("editForm").style.display = "block";
+    }
+
+    function hideEditForm() {
+        document.getElementById("editForm").style.display = "none";
+    }
+</script>
+
+</body>
+</html>

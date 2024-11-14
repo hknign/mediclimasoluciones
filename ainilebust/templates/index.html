@@ -175,6 +175,12 @@
         </div>
     </section>
 
+    {% if user.is_superuser %}
+        <a href="{% url 'admin_dashboard' %}">Panel de Admin</a>
+    {% else %}
+        <a href="{% url 'user_dashboard' %}">Mi Dashboard</a>
+    {% endif %}
+
     <footer>
         <p>&copy; 2024 Mediclimasoluciones. Todos los derechos reservados.</p>
         <div>
