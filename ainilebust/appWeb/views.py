@@ -1,19 +1,31 @@
-# views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, authenticate, logout
-from .forms import CustomUserCreationForm, CustomAuthenticationForm, ReseñaForm, ContactForm, ProductoForm, PresupuestoForm
-from .models import Reseña, Producto
-from django.core.mail import send_mail
-from django.conf import settings
-from django.http import JsonResponse
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.utils.translation import activate
+from django.contrib import messages
+from django.conf import settings
+from django.core.mail import send_mail
+from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.utils.translation import activate
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import CreateView
-import calendar
+
 from datetime import date, datetime
-from babel.dates import format_date
+import calendar
+import json
+
+from babel.dates import format_date, parse_date
+
+from .forms import (
+    CustomUserCreationForm,
+    CustomAuthenticationForm,
+    ReseñaForm,
+    ContactForm,
+    ProductoForm,
+    PresupuestoForm,
+    DisponibilidadForm,
+)
+from .models import Reseña, Producto, Disponibilidad
 
 
 def register_view(request):
@@ -178,22 +190,28 @@ def presupuesto_exitoso(request):
     return render(request, 'presupuesto_exitoso.html')
 
 
+
 def generar_calendario():
     activate('es')
     calendario = {}
+    year = date.today().year
     for mes in range(1, 13):
-        nombre_mes = format_date(datetime(2024, mes, 1), "MMMM", locale='es')
-        dias_mes = calendar.monthcalendar(date.today().year, mes)
+        nombre_mes = format_date(datetime(year, mes, 1), "MMMM", locale='es')
+        dias_mes = calendar.monthcalendar(year, mes)
         days = []
         for week in dias_mes:
             for dia in week:
                 if dia == 0:
                     continue
                 try:
-                    fecha = datetime(date.today().year, mes, dia)
+                    fecha = datetime(year, mes, dia).date()
                 except ValueError:
                     continue
-                estado = "disponible" if fecha.weekday() in [0, 1, 2] else "ocupado"
+                try:
+                    disponibilidad_dia = Disponibilidad.objects.get(fecha=fecha)
+                    estado = disponibilidad_dia.estado
+                except Disponibilidad.DoesNotExist:
+                    estado = "no-disponible"
                 days.append({"fecha": fecha, "estado": estado})
         
         calendario[nombre_mes.capitalize()] = days
@@ -201,9 +219,61 @@ def generar_calendario():
     return calendario
 
 
-def calendario_anual(request):
+def calendario_usuario(request):
     calendario = generar_calendario()
-    return render(request, 'calendario.html', {'calendario': calendario})
+    return render(request, 'calendario_usuario.html', {'calendario': calendario})
+
+@user_passes_test(lambda u: u.is_superuser)
+def calendario_admin(request):
+    calendario = generar_calendario()
+    return render(request, 'calendario_admin.html', {'calendario': calendario})
+
+@csrf_exempt
+def editar_disponibilidad(request, fecha):
+    try:
+        # Parsear la fecha desde el formato YYYY-MM-DD
+        fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
+    except ValueError as e:
+        return JsonResponse({"error": f"El formato de la fecha no es válido: {str(e)}"}, status=400)
+
+    if request.method == 'POST':
+        try:
+            # Cargar el cuerpo de la solicitud JSON
+            data = json.loads(request.body)
+            nuevo_estado = data.get("nuevo_estado")
+
+            if nuevo_estado not in ['disponible', 'ocupado', 'no-disponible']:
+                return JsonResponse({"error": "Estado no válido."}, status=400)
+
+            # Buscar o crear la disponibilidad correspondiente
+            disponibilidad, created = Disponibilidad.objects.get_or_create(fecha=fecha_obj)
+
+            # Actualizar el estado
+            disponibilidad.estado = nuevo_estado
+            disponibilidad.save()
+
+            return JsonResponse({"success": True, "nuevo_estado": nuevo_estado, "created": created})
+        except json.JSONDecodeError as e:
+            return JsonResponse({"error": f"Datos inválidos: {str(e)}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error al actualizar la disponibilidad: {str(e)}"}, status=500)
+    else:
+        return JsonResponse({"error": "Método no permitido."}, status=405)
+
+# Eliminar disponibilidad
+def eliminar_disponibilidad(request, fecha):
+    fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
+    disponibilidad = get_object_or_404(Disponibilidad, fecha=fecha_obj)
+
+    if request.method == 'POST':
+        disponibilidad.delete()
+        messages.success(request, 'Disponibilidad eliminada.')
+        return redirect('calendario_admin')
+
+    return render(request, 'eliminar_disponibilidad.html', {'fecha': fecha})
+
+
+
 
 
 class ProductoCreateView(CreateView):

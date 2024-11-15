@@ -1,6 +1,9 @@
 # models.py
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from datetime import date
+
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -55,3 +58,17 @@ class Producto(models.Model):
     
     def __str__(self):
         return self.nombre
+
+
+
+
+class Disponibilidad(models.Model):
+    fecha = models.DateField(unique=True, default=date.today)
+    estado = models.CharField(max_length=50, choices=[
+        ('disponible', 'Disponible'),
+        ('ocupado', 'Ocupado'),
+        ('no_disponible', 'No disponible'),
+    ])
+
+    def __str__(self):
+        return f"{self.fecha} - {self.estado}"

@@ -106,6 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'appWeb.CustomUser'
 
+
 AUTHENTICATION_BACKENDS = [
     'appWeb.backends.EmailAuthBackend',
     'django.contrib.auth.backends.ModelBackend',

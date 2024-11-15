@@ -68,17 +68,17 @@
             position: relative;
         }
 
-        .day.default {
+        .day.no-disponible {
             background-color: #e0e0e0;
             color: #666;
         }
 
-        .day.available {
+        .day.disponible {
             background-color: #28a745;
             color: white;
         }
 
-        .day.unavailable {
+        .day.ocupado {
             background-color: #dc3545;
             color: white;
         }
@@ -146,9 +146,9 @@
                 <div>Dom</div>
                 
                 {% for day in days %}
-                <div class="day default" onclick="toggleEstado(this)">
+                <div class="day {{ day.estado }}" onclick="toggleEstado(this)">
                     <span>{{ day.fecha.day }}</span>
-                    <div class="estado">No se ha añadido horario disponible</div>
+                    <div class="estado">{{ day.estado }}</div>
                 </div>
                 {% endfor %}
             </div>
@@ -170,4 +170,3 @@
     </script>
 </body>
 </html>
-
