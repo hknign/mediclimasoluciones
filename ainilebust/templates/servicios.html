@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -117,7 +118,7 @@
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="card servicio-card">
-                    <img src="imagenes/aire-acondicionado.jpg" class="card-img-top" alt="Instalación">
+                    <img src="{% static 'imagenes/aire-acondicionado.jpg' %}" class="card-img-top" alt="Instalación">
                     <div class="card-body">
                         <h5 class="card-title">Instalación</h5>
                         <p class="card-text">Realizamos instalaciones profesionales de equipos de aire acondicionado, garantizando un funcionamiento óptimo.</p>
@@ -127,7 +128,7 @@
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card servicio-card">
-                    <img src="imagenes/servicio2.jpg" class="card-img-top" alt="Mantenimiento">
+                    <img src="{% static 'imagenes/mantenimiento.jpg' %}" class="card-img-top" alt="Mantenimiento">
                     <div class="card-body">
                         <h5 class="card-title">Mantenimiento</h5>
                         <p class="card-text">Servicios de mantenimiento preventivo y correctivo para alargar la vida útil de tus equipos.</p>
@@ -137,7 +138,7 @@
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card servicio-card">
-                    <img src="imagenes/servicio3.jpg" class="card-img-top" alt="Soporte Técnico">
+                    <img src="{% static 'imagenes/soporte_tecnico.jpg' %}" class="card-img-top" alt="Soporte Técnico">
                     <div class="card-body">
                         <h5 class="card-title">Soporte Técnico</h5>
                         <p class="card-text">Asistencia técnica especializada para resolver cualquier problema o consulta que tengas.</p>
