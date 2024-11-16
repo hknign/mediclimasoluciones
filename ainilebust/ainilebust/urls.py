@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from appWeb.views import  register_view, login_view,index_view, productos,servicios,sobre_nosotros,contacto, agregar_al_carrito, eliminar_del_carrito, mostrar_carrito,realizar_presupuesto,presupuesto_exitoso, agregar_producto, editar_producto
+from appWeb.views import  register_view, login_view,index_view, productos,servicios,sobre_nosotros,contacto, agregar_al_carrito, eliminar_del_carrito, mostrar_carrito,realizar_presupuesto,presupuesto_exitoso, agregar_producto, editar_producto, logout_view
 from django.contrib.auth.views import LogoutView
 from appWeb.views import prueba, ProductoCreateView, eliminar_producto, admin_dashboard, user_dashboard
 from appWeb.views import calendario_admin, calendario_usuario, editar_disponibilidad, eliminar_disponibilidad
@@ -27,7 +27,7 @@ from django.conf import settings
 urlpatterns = [
     path('Registro/', register_view,name='Registro'),
     path('', login_view, name='Login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('logout/', logout_view, name='logout'),
     path('index',index_view, name='index'),
     path('productos/', productos, name='productos'),
     path('servicios/', servicios, name='servicios'),
