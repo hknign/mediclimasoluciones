@@ -41,6 +41,7 @@ urlpatterns = [
     path('calendario/usuario/', calendario_usuario, name='calendario_usuario'),
     path('calendario/admin/', calendario_admin, name='calendario_admin'),
     path('agregar-producto/', ProductoCreateView.as_view(), name='agregar_producto'),
+    path('editar_producto/', editar_producto, name='editar_producto'),
     path('editar_producto/<int:id>/', editar_producto, name='editar_producto'),
     path('eliminar_producto/<int:id>/',eliminar_producto,name='eliminar_producto'),
     path('prueba/',prueba, name='prueba'),
