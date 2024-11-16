@@ -98,15 +98,38 @@
         header .logo {
             height: 50px;
         }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .search-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
     <header>
-        <img src="images/logo.png" alt="Logo Mediclimasoluciones" class="logo">
+        <img src="{% static 'imagenes/logo.png' %}" alt="Logo Mediclimasoluciones" class="logo">
         <nav>
             <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="carrito.html">Carrito de compras</a></li>
+                <li><a href="{% url 'index' %}">Inicio</a></li>
+                <li><a href="{% url 'mostrar_carrito' %}">Carrito de compras</a></li>
             </ul>
         </nav>
     </header>
