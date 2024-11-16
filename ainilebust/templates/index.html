@@ -163,9 +163,10 @@
             <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
             <li><a href="{% url 'calendario_usuario' %}">Horarios</a></li>
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
+            {% if user.is_superuser %}
             <li><a href="{% url 'prueba' %}">Prueba</a></li>
             <li><a href="{% url 'calendario_admin'  %}">Prueba Calendario</a></li>
-
+            {% endif %}
         </ul>
     </nav>
 
