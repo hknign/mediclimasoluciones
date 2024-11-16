@@ -299,8 +299,25 @@ def agregar_producto(request):
     return render(request, 'agregar_producto.html', {'form': form})
 
 
-def editar_producto(request, id):
-    return render(request, 'editar_producto.html')
+def editar_producto(request, id=None):
+    if request.method == 'POST': 
+        id = request.POST.get('id')
+        producto = Producto.objects.get(id=id)
+        if 'imagen' in request.FILES and request.FILES['imagen']:
+            producto.imagen = request.FILES['imagen']
+        nombre = request.POST.get('nombre')
+        if nombre:
+            producto.nombre = nombre
+        descripcion = request.POST.get('descripcion')
+        if descripcion:
+            producto.descripcion = descripcion
+        precio = request.POST.get('precio')
+        if precio:
+            producto.precio = precio
+        producto.save()
+        return redirect('/prueba/')
+    producto = Producto.objects.get(id=id)
+    return render(request, 'editar_producto.html', {'p': producto})
 
 
 def eliminar_producto(request, id):
