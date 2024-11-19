@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos - Mediclimasoluciones</title>
+    <link rel="icon" href="{% static 'imagenes/Icono-mediclimas.png' %}" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -139,7 +140,7 @@
         <nav>
             <ul>
                 <li><a href="{% url 'index' %}">Inicio</a></li>
-                <li><a href="{% url 'mostrar_carrito' %}">Carrito de compras</a></li>
+ 
             </ul>
         </nav>
     </header>
@@ -163,10 +164,7 @@
                     <h3>{{ producto.nombre }}</h3>
                     <p>{{ producto.descripcion }}</p>
                     <p class="precio">Precio: ${{ producto.precio }}</p>
-                    <form action="{% url 'agregar_al_carrito' producto.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-agregar">Agregar al Carrito</button>
-                    </form>
+
                 </div>
             </div>
             {% endfor %}

@@ -38,8 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'crispy_bootstrap4',
     'appWeb',
 ]
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -107,10 +111,14 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'appWeb.CustomUser'
 
 
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
+
 AUTHENTICATION_BACKENDS = [
-    'appWeb.backends.EmailAuthBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    'appWeb.backends.EmailAuthBackend', 
+    'django.contrib.auth.backends.ModelBackend',  
 ]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

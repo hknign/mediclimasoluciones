@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mediclimasoluciones - Equipos Médicos BIOBASE</title>
+    <link rel="icon" href="{% static 'imagenes/Icono-mediclimas.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -135,13 +136,41 @@
             display: block;
             margin: 0 auto;
         }
-        .Carrito {
-            position: absolute;
-            top: 95px;
+    /* CSS para el popup del carrito */
+        .carrito-popup {
+            display: none; /* Escondido por defecto */
+            position: fixed;
+            z-index: 1;
             left: 0;
-            margin: 0; 
-
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* Fondo negro con opacidad */
         }
+
+        .carrito-contenido {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Puede ajustarse según necesidad */
+        }
+
+        .cerrar {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .cerrar:hover,
+        .cerrar:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
 
         li{
             margin-left: 20px;
@@ -156,7 +185,7 @@
 
     <nav>
         <ul>
-            <li><a href="" class="Carrito">🛒 Carrito</a></li>
+
             <li><a href="#inicio">Inicio</a></li>
             <li><a href="{% url 'productos' %}">Productos</a></li>
             <li><a href="{% url 'servicios' %}">Servicios</a></li>
@@ -165,6 +194,22 @@
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
             <li><a href="{% url 'prueba' %}">Prueba</a></li>
             <li><a href="{% url 'calendario_admin'  %}">Prueba Calendario</a></li>
+            {% if user.is_authenticated %}
+            <li>
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            </li>
+            <li>
+                <a href="#">@{{ user.username }}</a>
+            </li>
+            {% else %}
+            <li>
+                <a href="{% url 'Login' %}">Iniciar Sesión</a>
+            </li>
+
+            {% endif %}
 
         </ul>
     </nav>
@@ -184,6 +229,7 @@
     {% endif %}
 
     <footer>
+
         <p>&copy; 2024 Mediclimasoluciones. Todos los derechos reservados.</p>
         <div>
             <a href="https://facebook.com"><img src="{% static 'imagenes/facebook.png' %}" alt="Facebook" class="social-logo"></a>
@@ -191,6 +237,7 @@
             <a href="https://instagram.com"><img src="{% static 'imagenes/logo-instagram-1080p.png' %}" alt="Instagram" class="social-logo"></a>
         </div>
     </footer>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

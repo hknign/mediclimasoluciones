@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, get_backends
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.urls import reverse_lazy
 from django.utils.translation import activate
 from django.views.decorators.csrf import csrf_exempt
@@ -18,7 +18,6 @@ from babel.dates import format_date, parse_date
 
 from .forms import (
     CustomUserCreationForm,
-    CustomAuthenticationForm,
     ReseñaForm,
     ContactForm,
     ProductoForm,
@@ -27,56 +26,64 @@ from .forms import (
 )
 from .models import Reseña, Producto, Disponibilidad
 
+from django.contrib.auth.forms import AuthenticationForm
+from django.utils.module_loading import import_string
+
+from django.views.decorators.http import require_http_methods
+
+
+def get_user_backend(user):
+    for backend in get_backends():
+        if backend.get_user(user.pk):
+            return f"{backend.__module__}.{backend.__class__.__name__}"
+    return None
 
 def register_view(request):
-    """Registro de usuarios normales"""
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            return redirect('index')  
-        else:
-            messages.error(request, "Por favor, corrige los errores.")
+            backend = get_user_backend(user)
+            if backend:
+                # Aquí se pasa la cadena del backend al iniciar sesión
+                login(request, user, backend=backend)
+            else:
+                login(request, user)
+            return redirect('index')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form})
 
 
 def login_view(request):
-    """Inicio de sesión para usuarios y admin"""
     if request.method == 'POST':
-        form = CustomAuthenticationForm(request, data=request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('username')
+            username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(request, username=email, password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
-                # Redireccionar según rol
-                if user.is_superuser:
-                    return redirect('admin_dashboard')
+                backend = get_user_backend(user)
+                if backend:
+                    login(request, user, backend=backend)
                 else:
-                    return redirect('user_dashboard')
-            else:
-                messages.error(request, "Correo o contraseña incorrectos.")
-        else:
-            messages.error(request, "Formulario inválido. Revisa los datos.")
+                    login(request, user)
+                return redirect('index')
     else:
-        form = CustomAuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
 
-
+@require_http_methods(["GET", "POST"])
 @login_required
 def logout_view(request):
-    logout(request)
-    return redirect('login')
-
+    if request.method == 'POST':
+        logout(request)
+        return redirect('index')
+    return redirect('index')  # Redirige a otra página si el método no es POST
 
 @user_passes_test(lambda u: u.is_superuser)
 def admin_dashboard(request):
-    """Dashboard para el administrador"""
-    user = request.user  # Usuario autenticado
+    user = request.user
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST, instance=user)
         if form.is_valid():
@@ -85,23 +92,17 @@ def admin_dashboard(request):
             return redirect('admin_dashboard')
     else:
         form = CustomUserCreationForm(instance=user)
-
     return render(request, 'admin_dashboard.html', {'user': user, 'form': form})
-
 
 @user_passes_test(lambda u: not u.is_superuser)
 def user_dashboard(request):
-    """Dashboard para usuarios normales"""
     return render(request, 'user_dashboard.html')
-
 
 def index_view(request):
     return render(request, 'index.html')
 
-
 def servicios(request):
     return render(request, 'servicios.html')
-
 
 def contacto(request):
     if request.method == 'POST':
@@ -117,11 +118,10 @@ def contacto(request):
                 [settings.DEFAULT_FROM_EMAIL],
                 fail_silently=False,
             )
-            return redirect('contacto') 
+            return redirect('contacto')
     else:
         form = ContactForm()
     return render(request, 'contacto.html', {'form': form})
-
 
 def sobre_nosotros(request):
     reseñas = Reseña.objects.all().order_by('-fecha')
@@ -134,11 +134,9 @@ def sobre_nosotros(request):
         form = ReseñaForm()
     return render(request, 'sobre_nosotros.html', {'form': form, 'reseñas': reseñas})
 
-
-def agregar_al_carrito(request, producto_id):
+#def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     carrito = request.session.get('carrito', {})
-
     if str(producto_id) in carrito:
         carrito[str(producto_id)]['cantidad'] += 1
     else:
@@ -148,12 +146,10 @@ def agregar_al_carrito(request, producto_id):
             'cantidad': 1,
             'imagen': producto.imagen.url if producto.imagen else ''
         }
-
     request.session['carrito'] = carrito
     return JsonResponse({'mensaje': 'Producto agregado al carrito'})
 
-
-def eliminar_del_carrito(request, producto_id):
+#def eliminar_del_carrito(request, producto_id):
     carrito = request.session.get('carrito', {})
     if str(producto_id) in carrito:
         del carrito[str(producto_id)]
@@ -161,20 +157,16 @@ def eliminar_del_carrito(request, producto_id):
         return JsonResponse({'mensaje': 'Producto eliminado del carrito'})
     return JsonResponse({'mensaje': 'Producto no encontrado en el carrito'}, status=404)
 
-
-def mostrar_carrito(request):
+#def mostrar_carrito(request):
     carrito = request.session.get('carrito', {})
     total = sum(float(item['precio']) * item['cantidad'] for item in carrito.values())
     return render(request, 'carrito.html', {'carrito': carrito, 'total': total})
 
-
 def realizar_presupuesto(request):
     carrito = request.session.get('carrito', {})
     if not carrito:
-        return redirect('home')  # Redirige a la página principal si el carrito está vacío
-
+        return redirect('home')
     total = sum(float(item['precio']) * item['cantidad'] for item in carrito.values())
-
     if request.method == 'POST':
         form = PresupuestoForm(request.POST)
         if form.is_valid():
@@ -182,13 +174,10 @@ def realizar_presupuesto(request):
             return redirect('presupuesto_exitoso')
     else:
         form = PresupuestoForm()
-
     return render(request, 'realizar_presupuesto.html', {'form': form, 'total': total, 'carrito': carrito})
-
 
 def presupuesto_exitoso(request):
     return render(request, 'presupuesto_exitoso.html')
-
 
 
 def generar_calendario():
@@ -299,9 +288,25 @@ def agregar_producto(request):
     return render(request, 'agregar_producto.html', {'form': form})
 
 
-def editar_producto(request, id):
-    return render(request, 'editar_producto.html')
-
+def editar_producto(request, id=None):
+    if request.method == 'POST': 
+        id = request.POST.get('id')
+        producto = Producto.objects.get(id=id)
+        if 'imagen' in request.FILES and request.FILES['imagen']:
+            producto.imagen = request.FILES['imagen']
+        nombre = request.POST.get('nombre')
+        if nombre:
+            producto.nombre = nombre
+        descripcion = request.POST.get('descripcion')
+        if descripcion:
+            producto.descripcion = descripcion
+        precio = request.POST.get('precio')
+        if precio:
+            producto.precio = precio
+        producto.save()
+        return redirect('/prueba/')
+    producto = Producto.objects.get(id=id)
+    return render(request, 'editar_producto.html', {'p': producto})
 
 def eliminar_producto(request, id):
     if request.method == 'POST':

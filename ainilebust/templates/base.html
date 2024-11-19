@@ -1,4 +1,3 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -104,10 +103,10 @@
             <button id="cerrar-carrito" class="btn btn-light btn-sm">&times;</button>
         </div>
         <div class="contenido">
-            {% if carrito %}
+            {% if carrito.items %}
                 {% for id, item in carrito.items %}
                     <div class="producto" data-id="{{ id }}">
-                        <img src="{{ item.imagen }}" alt="{{ item.nombre }}">
+                        <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
                         <div class="info">
                             <h5>{{ item.nombre }}</h5>
                             <p>${{ item.precio }} x {{ item.cantidad }}</p>
@@ -120,7 +119,7 @@
             {% endif %}
         </div>
         <div class="footer">
-            <h5>Total: ${{ total }}</h5>
+            <h5>Total: ${{ carrito.total }}</h5>
             <a href="{% url 'realizar_presupuesto' %}" class="btn btn-success btn-block">Realizar presupuesto</a>
         </div>
     </div>

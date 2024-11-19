@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from appWeb.views import  register_view, login_view,index_view, productos,servicios,sobre_nosotros,contacto, agregar_al_carrito, eliminar_del_carrito, mostrar_carrito,realizar_presupuesto,presupuesto_exitoso, agregar_producto, editar_producto
+from appWeb.views import  register_view, login_view,index_view, productos,servicios,sobre_nosotros,contacto#, #agregar_al_carrito, eliminar_del_carrito, mostrar_carrito
+from appWeb.views import realizar_presupuesto,presupuesto_exitoso, agregar_producto, editar_producto
 from django.contrib.auth.views import LogoutView
-from appWeb.views import prueba, ProductoCreateView, eliminar_producto, admin_dashboard, user_dashboard
+from appWeb.views import prueba, ProductoCreateView, eliminar_producto, admin_dashboard, user_dashboard, editar_producto
 from appWeb.views import calendario_admin, calendario_usuario, editar_disponibilidad, eliminar_disponibilidad
 from django.conf.urls.static import static
 from django.conf import settings
@@ -33,9 +34,9 @@ urlpatterns = [
     path('servicios/', servicios, name='servicios'),
     path('sobre-nosotros/', sobre_nosotros, name='sobre_nosotros'),
     path('contacto/', contacto, name='contacto'),
-    path('agregar/<int:producto_id>/', agregar_al_carrito, name='agregar_al_carrito'),
-    path('eliminar/<int:producto_id>/', eliminar_del_carrito, name='eliminar_del_carrito'),
-    path('carrito/', mostrar_carrito, name='mostrar_carrito'),
+    #path('agregar_al_carrito/<int:producto_id>/', agregar_al_carrito, name='agregar_al_carrito'),
+    #path('eliminar_del_carrito/<int:producto_id>/', eliminar_del_carrito, name='eliminar_del_carrito'),
+   #path('carrito/', mostrar_carrito, name='mostrar_carrito'),
     path('realizar-presupuesto/', realizar_presupuesto, name='realizar_presupuesto'),
     path('presupuesto-exitoso/', presupuesto_exitoso, name='presupuesto_exitoso'),
     path('calendario/usuario/', calendario_usuario, name='calendario_usuario'),

@@ -1,16 +1,14 @@
 # forms.py
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import CustomUser, Reseña,Producto
+from django.contrib.auth.forms import UserCreationForm
+from .models import Reseña,Producto
 from .models import Disponibilidad
+from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ['email', 'username', 'first_name', 'last_name']
-
-class CustomAuthenticationForm(AuthenticationForm):
-    username = forms.EmailField(label="Correo electrónico")
+        fields = ('username','first_name', 'last_name','email',"password1","password2" )
 
 
 class ReseñaForm(forms.ModelForm):

@@ -5,23 +5,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendario Anual de Disponibilidad - Admin</title>
+    <link rel="icon" href="{% static 'imagenes/Icono-mediclimas.png' %}" type="image/x-icon">
     <style>
-        /* Estilos generales del calendario */
-        body { font-family: Arial, sans-serif; background-color: #f0f4f8; text-align: center; }
-        header, footer { background-color: #004d99; color: white; padding: 15px; }
-        .year-calendar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 20px auto; }
-        .month { border: 1px solid #ddd; border-radius: 8px; background-color: white; }
-        .month-header { background-color: #004d99; color: white; padding: 10px; }
-        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 10px; }
-        .day { cursor: pointer; border-radius: 50%; text-align: center; line-height: 30px; color: white; }
-        .disponible { background-color: green; }
-        .ocupado { background-color: red; }
-        .no-disponible { background-color: gray; }
-        .btn { padding: 10px; border: none; border-radius: 5px; cursor: pointer; color: white; }
-        #modo-edicion { margin: 10px; font-size: 1.2em; color: #004d99; font-weight: bold; display: none; }
-        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; background: white; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 10px; z-index: 10; }
-        #popup select, #popup button { margin: 10px 0; padding: 10px; width: 100%; }
-        #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f0f4f8;
+            text-align: center; }
+        header, footer { 
+            background-color: #004d99; 
+            color: white; 
+            padding: 15px; }
+        .year-calendar { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            max-width: 1200px; 
+            margin: 20px auto; }
+        .month { 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            background-color: white; }
+        .month-header { 
+            background-color: #004d99; 
+            color: white; 
+            padding: 10px; }
+        .days-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 5px; 
+            padding: 10px; }
+        .day { 
+            cursor: pointer; 
+            border-radius: 50%; 
+            text-align: center; 
+            line-height: 30px; 
+            color: white; }
+        .disponible { 
+            background-color: green; }
+        .ocupado { 
+            background-color: red; }
+        .no-disponible { 
+            background-color: gray; }
+        .btn { 
+            padding: 10px;
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            color: white; }
+        #modo-edicion { 
+            margin: 10px; 
+            font-size: 1.2em; 
+            color: #004d99; 
+            font-weight: bold; 
+            display: none; }
+        #popup { 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 300px; 
+            background: white; 
+            padding: 20px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+            border-radius: 10px; 
+            z-index: 10; }
+        #popup select, #popup button {
+            margin: 10px 0; 
+            padding: 10px; 
+            width: 100%; }
+        #overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.5); 
+            z-index: 5; }
+        
+        .btn-back {
+            margin-top: 20px;
+            background-color: #004d99;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #002d5a;
+        }
+
     </style>
 </head>
 <body>
@@ -60,6 +139,10 @@
         <button onclick="guardarEstado()">Guardar</button>
         <button onclick="cerrarPopup()">Cancelar</button>
     </div>
+
+
+    
+    <a href="{% url 'index' %}" class="btn-back">Volver al inicio</a>
 
     <footer>&copy; 2024 Mediclimasoluciones</footer>
 
