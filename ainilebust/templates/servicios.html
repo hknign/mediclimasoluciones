@@ -223,12 +223,32 @@
                     <td>descripcion</td>
                     <td>precio</td>
                     <td><a class="btn btn-primary btn-sm" href="#">Agregar al carrito</a></td>
+                    <td>
+                    {% if user.is_superuser %}
+                        <a class="btn btn-primary btn-sm" href="#">Editar Servicio</a>
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% if user.is_superuser %}
+                        <a class="btn btn-primary btn-sm" href="#">Eliminar Servicio</a>
+                    {% endif %}
+                    </td>
                 </tr>
                 <tr>
                     <td>nombre</td>
                     <td>descripcion</td>
                     <td>precio</td>
                     <td><a class="btn btn-primary btn-sm" href="#">Agregar al carrito</a></td>
+                    <td>
+                    {% if user.is_superuser %}
+                        <a class="btn btn-primary btn-sm" href="#">Editar Servicio</a>
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% if user.is_superuser %}
+                        <a class="btn btn-primary btn-sm" href="#">Eliminar Servicio</a>
+                    {% endif %}
+                    </td>
                 </tr>
             </tbody>
         </table>
