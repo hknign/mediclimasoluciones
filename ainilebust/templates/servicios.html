@@ -206,6 +206,9 @@
         <div class="text-center my-4">
             <h3 class="titulo-servicios mb-1">Lista de servicios</h3>
             <p class="section-description">En la siguiente lista puede encontrar todos los servicios que ofrecemos.</p>
+            {% if user.is_superuser %}
+                <a class="btn btn-primary btn-sm" href="#">Agregar Servicio</a>
+            {% endif %}
         </div>
         <table class="table">
             <thead>
