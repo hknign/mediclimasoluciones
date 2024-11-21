@@ -44,7 +44,7 @@ def register_view(request):
             user = form.save()
             backend = get_user_backend(user)
             if backend:
-                # Aquí se pasa la cadena del backend al iniciar sesión
+         
                 login(request, user, backend=backend)
             else:
                 login(request, user)
@@ -81,7 +81,7 @@ def logout_view(request):
     if request.method == 'GET':
         logout(request)
         return redirect('Login')
-      # Redirige a otra página si el método no es POST
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def admin_dashboard(request):
@@ -161,15 +161,15 @@ def eliminar_item_carrito(request, item_id):
 
 def obtener_items_del_carrito(usuario):
     try:
-        carrito = Carrito.objects.get(usuario=usuario)  # Obtiene el carrito del usuario
-        return carrito.items.all()  # Accede a los items a través del related_name
+        carrito = Carrito.objects.get(usuario=usuario) 
+        return carrito.items.all()
     except Carrito.DoesNotExist:
-        return []  # Si no existe el carrito, retorna una lista vacía
+        return []  
 
 
 def ver_carrito(request): 
     if request.user.is_authenticated: 
-        # Asegurándonos de que el usuario está autenticado 
+
         carrito_items = obtener_items_del_carrito(request.user) 
         data = { 
             'carrito_items': [{ 
