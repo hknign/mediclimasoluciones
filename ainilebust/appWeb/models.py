@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from datetime import date
+from django.conf import settings
+from django.contrib.auth import get_user_model 
+
+def get_default_user():
+    User = get_user_model() 
+    return User.objects.first().id
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -67,3 +73,46 @@ class Disponibilidad(models.Model):
 
     def __str__(self):
         return f"{self.fecha} - {self.estado}"
+
+class Servicio(models.Model):
+    nombre = models.CharField(max_length=80)
+    descripcion = models.TextField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    imagen = models.ImageField(upload_to='servicios/', blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+    
+class Carrito(models.Model):
+    usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='carrito'
+    )
+
+    def __str__(self):
+        return f"Carrito de {self.usuario}"
+
+# Modelo ItemCarrito
+class ItemCarrito(models.Model):
+    carrito = models.ForeignKey(
+        Carrito,
+        on_delete=models.CASCADE,
+        related_name="items"  # Esto nos permitirá acceder a los items como carrito.items
+    )
+    producto = models.ForeignKey(
+        'Producto',  # Entre comillas si está definido más abajo
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
+    servicio = models.ForeignKey(
+        'Servicio',  # Entre comillas si está definido más abajo
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
+    cantidad = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.producto if self.producto else self.servicio} - {self.cantidad}"

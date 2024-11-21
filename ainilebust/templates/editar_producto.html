@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 <!DOCTYPE html>
@@ -46,3 +47,51 @@
     </form>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Producto</title>
+</head>
+<body>
+    <h1>Editar Producto</h1>
+    <p>Imagen:</p>
+    <img src="{% if p.imagen %}{{ p.imagen.url }}{% else %}{% static 'imagenes/default.png' %}{% endif %}" alt="{{ p.nombre }}" class="producto-imagen" style="max-width: 350px; height: auto;">
+    <p>Nombre:</p>
+    <p>{{ p.nombre }}</p>
+    <p>Descripción:</p>
+    <p>{{ p.descripcion }}</p>
+    <p>Precio:</p>
+    <p>{{ p.precio }}</p>
+    <br>
+    <form action="/editar_producto/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ p.id }}">
+        <label for="imagen">Cambiar imagen:</label>
+        <br>
+        <input type="file" id="imagen" name="imagen">
+        <br>
+        <br>
+        <label for="nombre">Cambiar nombre:</label>
+        <br>
+        <input type="text" id="nombre" name="nombre">
+        <br>
+        <br>
+        <label for="descripcion">Cambiar descripcion:</label>
+        <br>
+        <input type="text" id="descripcion" name="descripcion">
+        <br>
+        <br>
+        <label for="precio">Cambiar Precio:</label>
+        <br>
+        <input type="number" id="precio" name="precio">
+        <br>
+        <br>
+        <button type="submit" id="editar_producto_btn">Enviar</button>
+    </form>
+</body>
+</html>
+>>>>>>> a092dde7f827d3ae684594ce32f1da74be6f5bd5

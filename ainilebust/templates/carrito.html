@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="es">
-<head>
+<!-- carrito_modal.html -->
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito de Compras - Mediclimasoluciones</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="icon" href="{% static 'imagenes/Icono-mediclimas.png' %}" type="image/x-icon">
-
+    <title>Document</title>
     <style>
-
-
-        .carrito-popup {
-            display: none;
+                .carrito-popup {
+            display: none; 
             position: fixed;
             z-index: 1;
             left: 0;
@@ -20,7 +15,7 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(0, 0, 0, 0.4); 
         }
 
         .carrito-contenido {
@@ -28,7 +23,7 @@
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%; 
+            width: 80%; /* Puede ajustarse según necesidad */
         }
 
         .cerrar {
@@ -46,69 +41,24 @@
         }
 
 
-
+        li{
+            margin-left: 20px;
+        }
     </style>
-</head>
-<body>
-    <header>
-        <img src="{% static 'images/logo.png' %}" alt="Logo Mediclimasoluciones">
-        <nav>
+ </head>
+ <body>
+    <div>
+        {% if carrito %}
             <ul>
-                <li><a href="{% url 'index' %}">Inicio</a></li>
-                <li><a href="{% url 'productos' %}">Productos</a></li>
-                <li><a href="javascript:void(0);" onclick="mostrarCarrito()">Carrito</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <h1>Bienvenido a Mediclimasoluciones</h1>
-        <button onclick="mostrarCarrito()">Mostrar Carrito</button>
-        <div id="carrito-popup" class="carrito-popup">
-            <div class="carrito-contenido">
-                <span class="cerrar" onclick="cerrarCarrito()">&times;</span>
-                <h2>Tu carrito</h2>
-                {% for producto_id, producto in carrito.items %}
-                <div class="producto-carrito">
-                    <h3>{{ producto.nombre }}</h3>
-                    <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
-                    <p>Precio: ${{ producto.precio }}</p>
-                    <p>Cantidad: {{ producto.cantidad }}</p>
-                    <button onclick="eliminarDelCarrito({ producto_id })">Eliminar</button>
-                </div>
+                {% for item in carrito %}
+                    <li>{{ item.nombre }} - {{ item.precio }}</li>
                 {% endfor %}
-                <h2>Total: ${{ total }}</h2>
-                <button>Realizar compra</button>
-            </div>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2024 Mediclimasoluciones</p>
-    </footer>
-    <script>
-        function mostrarCarrito() {
-            document.getElementById("carrito-popup").style.display = "block";
-        }
+            </ul>
+        {% else %}
+            <p>El carrito está vacío.</p>
+        {% endif %}
+    </div>
+    
+ </body>
+ </html>
 
-        function cerrarCarrito() {
-            document.getElementById("carrito-popup").style.display = "none";
-        }
-
-        function eliminarDelCarrito(productoId) {
-            fetch(`/eliminar_del_carrito/${productoId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.mensaje) {
-                    location.reload();
-                } else {
-                    alert('Error al eliminar el producto');
-                }
-            });
-        }
-    </script>
-</body>
-</html>

@@ -136,81 +136,161 @@
             display: block;
             margin: 0 auto;
         }
-    /* CSS para el popup del carrito */
-        .carrito-popup {
-            display: none; /* Escondido por defecto */
+        #carrito-popup {
+            display: none;
             position: fixed;
-            z-index: 1;
-            left: 0;
             top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4); /* Fondo negro con opacidad */
-        }
-
-        .carrito-contenido {
-            background-color: white;
-            margin: 15% auto;
+            right: 0;
+            width: 300px; /* Ancho del carrito, ajusta según lo necesites */
+            height: 100%; /* Alto completo de la página */
+            background-color: #fff;
             padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Puede ajustarse según necesidad */
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda para destacarlo */
+            z-index: 1000;
+            overflow-y: auto; /* Permite el desplazamiento si hay muchos productos */
         }
 
-        .cerrar {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+        #carrito-popup .carrito-contenido {
+            margin-top: 20px;
         }
 
-        .cerrar:hover,
-        .cerrar:focus {
-            color: black;
-            text-decoration: none;
+        .producto-carrito {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .producto-carrito img {
+            max-width: 80px; /* Ajusta el tamaño de las imágenes */
+            margin-right: 20px;
+        }
+
+        .producto-carrito h3 {
+            font-size: 1.2em;
+        }
+
+        .producto-carrito p {
+            margin: 5px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Botón para mostrar el carrito (si lo necesitas en el sitio) */
+        #mostrar-carrito-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
             cursor: pointer;
         }
 
-
-        li{
-            margin-left: 20px;
+        #mostrar-carrito-btn:hover {
+            background-color: #218838;
         }
-
+        .dropdown { 
+            position: relative; 
+            display: inline-block; 
+        } 
+        .dropdown-options { 
+            display: none; 
+            position: absolute; 
+            background-color: white; 
+            min-width: 160px; 
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
+            z-index: 1; 
+        } 
+        .dropdown-options a { 
+            color: black; 
+            padding: 12px 16px; 
+            text-decoration: none; display: block; 
+        } 
+        .dropdown-options a:hover {
+            background-color: #f1f1f1;
+        } 
+        .dropdown:hover .dropdown-options { 
+            display: block; 
+        }
 
     </style>
 </head><body>
     <header>
         <img src="{% static 'imagenes/logo.png' %}" alt="Logo Mediclimasoluciones" class="logo">
     </header>
-
+    
     <nav>
         <ul>
 
             <li><a href="#inicio">Inicio</a></li>
-            <li><a href="{% url 'productos' %}">Productos</a></li>
+            <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'prueba' %}">Gestión Productos</a>
+                {% else %}
+                    <a href="{% url 'productos' %}">Productos</a>
+                {% endif %}
+            </li>
             <li><a href="{% url 'servicios' %}">Servicios</a></li>
             <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
-            <li><a href="{% url 'calendario_usuario' %}">Horarios</a></li>
+            <li>
+                
+                {% if user.is_superuser %}
+                    <a href="{% url 'calendario_admin' %}">Gestión Horarios</a>
+                {% else %}
+                    <a href="{% url 'calendario_usuario' %}">Horarios</a>
+                {% endif %}
+    
+            </li>
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
-            <li><a href="{% url 'prueba' %}">Prueba</a></li>
-            <li><a href="{% url 'calendario_admin'  %}">Prueba Calendario</a></li>
-            {% if user.is_authenticated %}
+            
+            <!-- Botón para abrir el carrito -->
+            <button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button>
             <li>
-                <form action="{% url 'logout' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit">Cerrar sesión</button>
-                </form>
-            </li>
-            <li>
-                <a href="#">@{{ user.username }}</a>
-            </li>
-            {% else %}
-            <li>
-                <a href="{% url 'Login' %}">Iniciar Sesión</a>
-            </li>
+                <div class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
+                    <div class="dropdown-options">
+                        {% if user.is_superuser %}
+                            <a href="{% url 'admin_dashboard' %}">Perfil</a>
+                        {% else %}
+                            <a href="{% url 'user_dashboard' %}">Perfil</a>
+                        {% endif %}
+                        <a href="#">Ajustes</a>
+                        {% if user.is_authenticated %}
+                        <form action="{% url 'logout' %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit">Cerrar sesión</button>
+                        </form>
 
-            {% endif %}
+                        {% else %}
+                        <li>
+                            <a href="{% url 'Login' %}">Iniciar Sesión</a>
+                        </li>
+            
 
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+        
         </ul>
     </nav>
 
@@ -222,11 +302,6 @@
         </div>
     </section>
 
-    {% if user.is_superuser %}
-        <a href="{% url 'admin_dashboard' %}">Panel de Admin</a>
-    {% else %}
-        <a href="{% url 'user_dashboard' %}">Mi Dashboard</a>
-    {% endif %}
 
     <footer>
 
@@ -238,9 +313,153 @@
         </div>
     </footer>
 
+    <div id="carrito-popup">
+        <h2>Mi Carrito</h2>
+        <div id="contenido-carrito">
+            <!-- Aquí se cargarán los productos dinámicamente -->
+        </div>
+        <div class="carrito-total">
+            <h3>Total: <span id="total-carrito">$0</span></h3>
+        </div>
+        <button onclick="finalizarCompra()" class="btn btn-success">Finalizar Compra</button>
+        <button onclick="cerrarCarrito()" class="btn btn-secondary">Cerrar Carrito</button>
+    </div>
+    
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Mostrar el carrito (popup)
+        function mostrarCarrito() {
+            cargarCarrito(); // Cargar los datos del carrito
+            const carrito = document.getElementById('carrito-popup');
+            carrito.style.display = 'block'; // Mostrar el carrito
+        }
+
+        // Cerrar el carrito (popup)
+        function cerrarCarrito() {
+            const carrito = document.getElementById('carrito-popup');
+            carrito.style.display = 'none'; // Ocultar el carrito
+        }
+
+        // Cargar los productos del carrito desde el backend
+        function cargarCarrito() {
+            fetch('/carrito/')
+                .then(response => response.json())
+                .then(data => {
+                    const carritoContenido = document.getElementById('contenido-carrito');
+                    const totalCarrito = document.getElementById('total-carrito');
+                    carritoContenido.innerHTML = ''; // Limpia el contenido actual
+                    let total = 0;
+
+                    if (data.carrito_items && data.carrito_items.length > 0) {
+                        data.carrito_items.forEach(item => {
+                            const productoDiv = document.createElement('div');
+                            productoDiv.classList.add('producto-carrito');
+                            productoDiv.innerHTML = `
+                                <img src="${item.imagen_url || 'placeholder.jpg'}" alt="${item.nombre}" style="max-width: 80px;">
+                                <div>
+                                    <h3>${item.nombre}</h3>
+                                    <p>Precio: $${item.precio}</p>
+                                    <p>Cantidad: ${item.cantidad}</p>
+                                </div>
+                                <button class="btn btn-danger" onclick="eliminarProducto(${item.id})">Eliminar</button>
+                            `;
+                            carritoContenido.appendChild(productoDiv);
+                            total += item.precio * item.cantidad; // Calcula el total
+                        });
+                    } else {
+                        carritoContenido.innerHTML = '<p>El carrito está vacío.</p>';
+                    }
+                    totalCarrito.textContent = `$${total.toFixed(2)}`; // Actualiza el total
+                })
+                .catch(error => console.error('Error al cargar el carrito:', error));
+        }
+
+        // Agregar un producto al carrito
+        function agregarAlCarrito(productoId) {
+            fetch(`/agregar_producto/${productoId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        cargarCarrito(); // Recarga el carrito automáticamente
+                    } else {
+                        console.error('Error al agregar el producto');
+                    }
+                })
+                .catch(error => console.error('Error al agregar al carrito:', error));
+        }
+
+        // Eliminar un producto del carrito
+        function eliminarProducto(productoId) {
+            fetch(`/eliminar-producto/${productoId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        cargarCarrito(); // Recarga el carrito automáticamente
+                    } else {
+                        console.error('Error al eliminar el producto');
+                    }
+                })
+                .catch(error => console.error('Error al eliminar del carrito:', error));
+        }
+
+        // Finalizar la compra
+        function finalizarCompra() {
+            alert('¡Gracias por tu compra!');
+            fetch('/ruta-de-finalizar-compra/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        cerrarCarrito();
+                        cargarCarrito(); // Limpia el carrito tras la compra
+                    } else {
+                        console.error('Error al finalizar la compra');
+                    }
+                })
+                .catch(error => console.error('Error al finalizar la compra:', error));
+        }
+
+        // Mostrar el carrito al hacer clic en el botón
+        document.getElementById('carritoBtn').addEventListener('click', mostrarCarrito);
+
+        // Cerrar el carrito al hacer clic en el botón
+        document.getElementById('cerrarPopup').addEventListener('click', cerrarCarrito);
+
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
 </body>
 </html>

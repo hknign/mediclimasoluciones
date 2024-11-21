@@ -22,9 +22,8 @@ from .forms import (
     ContactForm,
     ProductoForm,
     PresupuestoForm,
-    DisponibilidadForm,
 )
-from .models import Reseña, Producto, Disponibilidad
+from .models import Reseña, Producto, Servicio, Carrito, ItemCarrito, Disponibilidad
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.module_loading import import_string
@@ -78,8 +77,11 @@ def login_view(request):
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
-        return redirect('index')
-    return redirect('index')  # Redirige a otra página si el método no es POST
+        return redirect('Login')
+    if request.method == 'GET':
+        logout(request)
+        return redirect('Login')
+      # Redirige a otra página si el método no es POST
 
 @user_passes_test(lambda u: u.is_superuser)
 def admin_dashboard(request):
@@ -134,33 +136,56 @@ def sobre_nosotros(request):
         form = ReseñaForm()
     return render(request, 'sobre_nosotros.html', {'form': form, 'reseñas': reseñas})
 
-#def agregar_al_carrito(request, producto_id):
+def agregar_producto_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
-    carrito = request.session.get('carrito', {})
-    if str(producto_id) in carrito:
-        carrito[str(producto_id)]['cantidad'] += 1
-    else:
-        carrito[str(producto_id)] = {
-            'nombre': producto.nombre,
-            'precio': str(producto.precio),
-            'cantidad': 1,
-            'imagen': producto.imagen.url if producto.imagen else ''
-        }
-    request.session['carrito'] = carrito
-    return JsonResponse({'mensaje': 'Producto agregado al carrito'})
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    item, created = ItemCarrito.objects.get_or_create(carrito=carrito, producto=producto)
+    if not created:
+        item.cantidad += 1
+    item.save()
+    return redirect('ver_carrito')
 
-#def eliminar_del_carrito(request, producto_id):
-    carrito = request.session.get('carrito', {})
-    if str(producto_id) in carrito:
-        del carrito[str(producto_id)]
-        request.session['carrito'] = carrito
-        return JsonResponse({'mensaje': 'Producto eliminado del carrito'})
-    return JsonResponse({'mensaje': 'Producto no encontrado en el carrito'}, status=404)
+def agregar_servicio_al_carrito(request, servicio_id):
+    servicio = get_object_or_404(Servicio, id=servicio_id)
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    item, created = ItemCarrito.objects.get_or_create(carrito=carrito, servicio=servicio)
+    if not created:
+        item.cantidad += 1
+    item.save()
+    return redirect('ver_carrito')
 
-#def mostrar_carrito(request):
-    carrito = request.session.get('carrito', {})
-    total = sum(float(item['precio']) * item['cantidad'] for item in carrito.values())
-    return render(request, 'carrito.html', {'carrito': carrito, 'total': total})
+def eliminar_item_carrito(request, item_id):
+    item = get_object_or_404(ItemCarrito, id=item_id)
+    item.delete()
+    return redirect('ver_carrito')
+
+def obtener_items_del_carrito(usuario):
+    try:
+        carrito = Carrito.objects.get(usuario=usuario)  # Obtiene el carrito del usuario
+        return carrito.items.all()  # Accede a los items a través del related_name
+    except Carrito.DoesNotExist:
+        return []  # Si no existe el carrito, retorna una lista vacía
+
+
+def ver_carrito(request): 
+    if request.user.is_authenticated: 
+        # Asegurándonos de que el usuario está autenticado 
+        carrito_items = obtener_items_del_carrito(request.user) 
+        data = { 
+            'carrito_items': [{ 
+                'id': item.id,
+                'imagen_url': item.producto.imagen.url if item.producto.imagen else None, 
+                'nombre': item.producto.nombre, 
+                'precio': item.producto.precio, 
+                'cantidad': item.cantidad, 
+                'total': item.producto.precio * item.cantidad } 
+                for item in carrito_items] 
+            } 
+        return JsonResponse(data) 
+    else: return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
+
+def finalizar_compra(request):
+    return render(request,'finalizar_compra.html')
 
 def realizar_presupuesto(request):
     carrito = request.session.get('carrito', {})

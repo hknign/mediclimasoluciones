@@ -140,7 +140,7 @@
         <nav>
             <ul>
                 <li><a href="{% url 'index' %}">Inicio</a></li>
- 
+                <li><a href="{% url 'ver_carrito' %}">Carrito de compras</a></li>
             </ul>
         </nav>
     </header>
@@ -164,7 +164,10 @@
                     <h3>{{ producto.nombre }}</h3>
                     <p>{{ producto.descripcion }}</p>
                     <p class="precio">Precio: ${{ producto.precio }}</p>
-
+                    <form action="{% url 'agregar_producto_al_carrito' producto.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-agregar">Agregar al Carrito</button>
+                    </form>
                 </div>
             </div>
             {% endfor %}
