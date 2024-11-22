@@ -8,20 +8,224 @@
     <link rel="icon" href="{% static 'imagenes/Icono-mediclimas.png' %}" type="image/x-icon">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         header {
-            width: 100%;
-            background-color: #004d99;
-            color: #fff;
-            padding: 15px;
+            background-color: #004d40;
+            padding: 10px 0;
+            color: white;
             text-align: center;
+        }
+
+        header img {
+            width: 150px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #00695c;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #004d40;
+        }
+        .hero-section {
+            background-image: url('static/imagenes/fondo.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh; 
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            margin-top: -64px;
+            margin-bottom: -64px;
+        }
+
+        .hero-section h1 {
+            font-size: 4em;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .hero-section p {
             font-size: 1.5em;
+        }
+
+        .btn-primary {
+            background-color: #ff6f00;
+            border-color: #ff6f00;
+        }
+
+        .btn-primary:hover {
+            background-color: #e65100;
+            border-color: #e65100;
+        }
+
+        .section-title {
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .section-title h2 {
+            font-size: 3em;
+            color: #004d40;
+        }
+
+        .card {
+            transition: transform 0.3s;
+            margin-bottom: 30px;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        footer {
+            background-color: #004d40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer .social-logo {
+            width: 40px;
+            margin: 0 10px;
+            transition: transform 0.3s;
+        }
+
+        footer .social-logo:hover {
+            transform: scale(1.2);
+        }
+        h6{
+            margin-bottom: 300px;
+        }
+        .slogan{
+            margin-bottom: 100px;
+
+        }
+        .logo {
+            width: 75px; 
+            height: 75px; 
+            border-radius: 50%; 
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+        #carrito-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px; /* Ancho del carrito, ajusta según lo necesites */
+            height: 100%; /* Alto completo de la página */
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda para destacarlo */
+            z-index: 1000;
+            overflow-y: auto; /* Permite el desplazamiento si hay muchos productos */
+        }
+
+        #carrito-popup .carrito-contenido {
+            margin-top: 20px;
+        }
+
+        .producto-carrito {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .producto-carrito img {
+            max-width: 80px; /* Ajusta el tamaño de las imágenes */
+            margin-right: 20px;
+        }
+
+        .producto-carrito h3 {
+            font-size: 1.2em;
+        }
+
+        .producto-carrito p {
+            margin: 5px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Botón para mostrar el carrito (si lo necesitas en el sitio) */
+        #mostrar-carrito-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #mostrar-carrito-btn:hover {
+            background-color: #218838;
+        }
+        .dropdown { 
+            position: relative; 
+            display: inline-block; 
+        } 
+        .dropdown-options { 
+            display: none; 
+            position: absolute; 
+            background-color: white; 
+            min-width: 160px; 
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
+            z-index: 1; 
+        } 
+        .dropdown-options a { 
+            color: black; 
+            padding: 12px 16px; 
+            text-decoration: none; display: block; 
+        } 
+        .dropdown-options a:hover {
+            background-color: #f1f1f1;
+        } 
+        .dropdown:hover .dropdown-options { 
+            display: block; 
         }
 
         .year-calendar {
@@ -41,7 +245,7 @@
         }
 
         .month-header {
-            background-color: #004d99;
+            background-color: #004d40;
             color: #fff;
             padding: 10px;
             text-align: center;
@@ -102,7 +306,7 @@
 
         .btn-back {
             margin-top: 20px;
-            background-color: #004d99;
+            background-color: #004d40;
             color: #fff;
             padding: 10px 20px;
             border: none;
@@ -114,14 +318,14 @@
         }
 
         .btn-back:hover {
-            background-color: #002d5a;
+            background-color: #016857;
         }
 
         footer {
             width: 100%;
             text-align: center;
             padding: 15px;
-            background-color: #004d99;
+            background-color: #004d40;
             color: #fff;
             margin-top: 20px;
             font-size: 0.9em;
@@ -129,6 +333,66 @@
     </style>
 </head>
 <body>
+
+    <header>
+        <img src="{% static 'imagenes/logo.png' %}" alt="Logo Mediclimasoluciones" class="logo">
+    </header>
+    
+    <nav>
+        <ul>
+
+            <li><a href="{% url 'index' %}">Inicio</a></li>
+            <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'prueba' %}">Gestión Productos</a>
+                {% else %}
+                    <a href="{% url 'productos' %}">Productos</a>
+                {% endif %}
+            </li>
+            <li><a href="{% url 'servicios' %}">Servicios</a></li>
+            <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
+            <li>
+                
+                {% if user.is_superuser %}
+                    <a href="{% url 'calendario_admin' %}">Gestión Horarios</a>
+                {% else %}
+                    <a href="{% url 'calendario_usuario' %}">Horarios</a>
+                {% endif %}
+    
+            </li>
+            <li><a href="{% url 'contacto' %}">Contacto</a></li>
+            
+            <!-- Botón para abrir el carrito -->
+            <button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button>
+            <li>
+                <div class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
+                    <div class="dropdown-options">
+                        {% if user.is_superuser %}
+                            <a href="{% url 'admin_dashboard' %}">Perfil</a>
+                        {% else %}
+                            <a href="{% url 'user_dashboard' %}">Perfil</a>
+                        {% endif %}
+                        <a href="#">Ajustes</a>
+                        {% if user.is_authenticated %}
+                        <form action="{% url 'logout' %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit">Cerrar sesión</button>
+                        </form>
+
+                        {% else %}
+                        <li>
+                            <a href="{% url 'Login' %}">Iniciar Sesión</a>
+                        </li>
+            
+
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+        
+        </ul>
+    </nav>
 
     <header>Calendario Anual de Disponibilidad</header>
 
@@ -160,7 +424,12 @@
     <a href="{% url 'index' %}" class="btn-back">Volver al inicio</a>
 
     <footer>
-        &copy; 2024 Mediclimasoluciones
+        <p>&copy; 2024 Mediclimasoluciones. Todos los derechos reservados.</p>
+        <div>
+            <a href="https://facebook.com"><img src="{% static 'imagenes/facebook.png' %}" alt="Facebook" class="social-logo"></a>
+            <a href="https://whatsapp.com"><img src="{% static 'imagenes/WhatsApp.png' %}" alt="WhatsApp" class="social-logo"></a>
+            <a href="https://instagram.com"><img src="{% static 'imagenes/logo-instagram-1080p.png' %}" alt="Instagram" class="social-logo"></a>
+        </div>
     </footer>
 
     <script>

@@ -55,7 +55,7 @@
             background-image: url('static/imagenes/fondo.png');
             background-size: cover;
             background-position: center;
-            height: 100vh; 
+            height: 110vh; 
             width: 100%;
             display: flex;
             justify-content: center;
@@ -241,7 +241,7 @@
     <nav>
         <ul>
 
-            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="{% url 'index' %}">Inicio</a></li>
             <li>
                 {% if user.is_superuser %}
                     <a href="{% url 'prueba' %}">Gestión Productos</a>
