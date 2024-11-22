@@ -145,6 +145,7 @@
             <p class="section-description">Ofrecemos soluciones integrales para todas tus necesidades de climatización y soporte técnico.</p>
         </div>
         <div class="row">
+            <!-- Sección de Instalación -->
             <div class="col-md-4 mb-4">
                 <div class="card servicio-card">
                     <img src="{% static 'imagenes/aire-acondicionado.jpg' %}" class="card-img-top" alt="Instalación">
@@ -153,49 +154,60 @@
                         <p class="card-text">Realizamos instalaciones profesionales de equipos de aire acondicionado, garantizando un funcionamiento óptimo.</p>
                         <div class="dropdown">
                             <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Servicios de Instalación
+                                Servicios de Instalación
                             </a>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">Servicio</a></li>
-                              <li><a class="dropdown-item" href="#">Servicio</a></li>
+                                {% for servicio in servicios_instalacion %}
+                                    <li><a class="dropdown-item" href="#">{{ servicio.nombre }}</a></li>
+                                {% empty %}
+                                    <li><a class="dropdown-item" href="#">No hay servicios disponibles</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
+    
+            <!-- Sección de Mantenimiento -->
             <div class="col-md-4 mb-4">
                 <div class="card servicio-card">
                     <img src="{% static 'imagenes/mantenimiento.jpg' %}" class="card-img-top" alt="Mantenimiento">
                     <div class="card-body">
                         <h5 class="card-title">Mantenimiento</h5>
                         <p class="card-text">Servicios de mantenimiento preventivo y correctivo para alargar la vida útil de tus equipos.</p>
-                        <br>
                         <div class="dropdown">
                             <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Servicios de Mantenimiento
+                                Servicios de Mantenimiento
                             </a>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">Servicio</a></li>
-                              <li><a class="dropdown-item" href="#">Servicio</a></li>
+                                {% for servicio in servicios_mantenimiento %}
+                                    <li><a class="dropdown-item" href="#">{{ servicio.nombre }}</a></li>
+                                {% empty %}
+                                    <li><a class="dropdown-item" href="#">No hay servicios disponibles</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
+    
+            <!-- Sección de Soporte Técnico -->
             <div class="col-md-4 mb-4">
                 <div class="card servicio-card">
                     <img src="{% static 'imagenes/soporte_tecnico.jpg' %}" class="card-img-top" alt="Soporte Técnico">
                     <div class="card-body">
                         <h5 class="card-title">Soporte Técnico</h5>
                         <p class="card-text">Asistencia técnica especializada para resolver cualquier problema o consulta que tengas.</p>
-                        <br>
                         <div class="dropdown">
                             <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Servicios de Soporte Técnico
+                                Servicios de Soporte Técnico
                             </a>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">Servicio</a></li>
-                              <li><a class="dropdown-item" href="#">Servicio</a></li>
+                                {% for servicio in ser%}
+                                    <li><a class="dropdown-item" href="#">{{ servicio.nombre }}</a></li>
+                                {% empty %}
+                                    <li><a class="dropdown-item" href="#">No hay servicios disponibles</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
@@ -207,7 +219,10 @@
             <h3 class="titulo-servicios mb-1">Lista de servicios</h3>
             <p class="section-description">En la siguiente lista puede encontrar todos los servicios que ofrecemos.</p>
             {% if user.is_superuser %}
-                <a class="btn btn-primary btn-sm" href="#">Agregar Servicio</a>
+            <!-- Botón que abre el modal -->
+            <a class="btn btn-primary btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#agregarServicioModal">
+                Agregar Servicio
+            </a>
             {% endif %}
         </div>
         <table class="table">
@@ -216,19 +231,25 @@
                     <th>Nombre</th>
                     <th>Descripción</th>
                     <th>Precio</th>
+                    <th>Categoria</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                {% for servicio in servicios %}
+                {% for servicio in todos %}
                 <tr>
                     <td>{{ servicio.nombre }}</td>
                     <td>{{ servicio.descripcion }}</td>
                     <td>${{ servicio.precio }}</td>
+                    <td>{{ servicio.categoria}}</td>
                     <td>
-                        <button class="btn btn-primary btn-sm btn-agregar" data-servicio-id="{{ servicio.id }}" data-servicio-nombre="{{ servicio.nombre }}" data-servicio-precio="{{ servicio.precio }}">
-                            Agregar al carrito
-                        </button>
+                        {% if user.is_superuser %}
+                           
+                        {% else %}
+                            <button id="btn-agregar" class="btn btn-primary btn-sm btn-agregar" data-servicio-id="{{ servicio.id }}" data-servicio-nombre="{{ servicio.nombre }}" data-servicio-precio="{{ servicio.precio }}">
+                                Agregar al carrito
+                            </button>
+                        {% endif %}
                     </td>
                     {% if user.is_superuser %}
                     <td>
@@ -239,11 +260,62 @@
                     </td>
                     {% endif %}
                 </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No hay servicios disponibles.</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
+        
     
     </section>
+    <!-- Modal -->
+    <div class="modal fade" id="agregarServicioModal" tabindex="-1" aria-labelledby="agregarServicioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agregarServicioModalLabel">Agregar Nuevo Servicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de Agregar Servicio -->
+                    <form method="POST" action="{% url 'agregar_servicio' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Servicio</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción del Servicio</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label">Categoría</label>
+                            <select class="form-select" id="categoria" name="categoria" required>
+                                <option value="INSTALACION">Instalación</option>
+                                <option value="MANTENIMIENTO">Mantenimiento</option>
+                                <option value="SOPORTETECNICO">Soporte Técnico</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="precio" class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="precio" name="precio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="imagen" class="form-label">Imagen</label>
+                            <input type="file" class="form-control" id="imagen" name="imagen">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Agregar Servicio</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         document.getElementById('search').addEventListener('input', function() {
         const searchValue = this.value.toLowerCase();
@@ -273,6 +345,8 @@
             const servicioId = this.getAttribute('data-servicio-id');
             const servicioNombre = this.getAttribute('data-servicio-nombre');
             const servicioPrecio = this.getAttribute('data-servicio-precio');
+            const servicioCategoria=this.getAttribute('data-servicio-categoria');
+            const servicioImagen = this.getAttribute('data-servicio-imagen');
 
             // Enviar el servicio al backend para agregarlo al carrito
             fetch('/agregar_servicio/', {
@@ -284,7 +358,9 @@
                 body: JSON.stringify({
                     servicio_id: servicioId,
                     nombre: servicioNombre,
-                    precio: servicioPrecio
+                    precio: servicioPrecio,
+                    categoria:servicioCategoria,
+                    imagen:servicioImagen,
                 })
             })
             .then(response => response.json())

@@ -22,6 +22,7 @@ from .forms import (
     ContactForm,
     ProductoForm,
     PresupuestoForm,
+    ServicioForm
 )
 from .models import Reseña, Producto, Servicio, Carrito, ItemCarrito, Disponibilidad
 
@@ -103,8 +104,6 @@ def user_dashboard(request):
 def index_view(request):
     return render(request, 'index.html')
 
-def servicios(request):
-    return render(request, 'servicios.html')
 
 def contacto(request):
     if request.method == 'POST':
@@ -125,6 +124,7 @@ def contacto(request):
         form = ContactForm()
     return render(request, 'contacto.html', {'form': form})
 
+
 def sobre_nosotros(request):
     reseñas = Reseña.objects.all().order_by('-fecha')
     if request.method == 'POST':
@@ -144,6 +144,39 @@ def agregar_producto_al_carrito(request, producto_id):
         item.cantidad += 1
     item.save()
     return redirect('ver_carrito')
+
+
+class ServicioCreateView(CreateView):
+    model = Servicio
+    form_class = ServicioForm
+    template_name = 'agregar_servicio.html'  
+    success_url = reverse_lazy('index') 
+
+def servicios(request):
+    # Filtrar los servicios por categoría
+    servicios_instalacion = Servicio.objects.filter(categoria='INSTALACION')
+    servicios_mantenimiento = Servicio.objects.filter(categoria='MANTENIMIENTO')
+    servicios_tecnico = Servicio.objects.filter(categoria='SOPORTE_TECNICO')
+
+    todos = Servicio.objects.all()
+    
+    return render(request, 'servicios.html', {
+        'servicios_instalacion': servicios_instalacion,
+        'servicios_mantenimiento': servicios_mantenimiento,
+        'servicios_tecnico': servicios_tecnico,
+        'todos':todos,
+    })
+
+
+def agregar_servicio(request,servicio_id):
+    if request.method == 'POST':
+        form = ServicioForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()  
+            return redirect('index') 
+    else:
+        form = ServicioForm()
+    return render(request, 'agregar_servicio.html', {'form': form})
 
 def agregar_servicio_al_carrito(request, servicio_id):
     servicio = get_object_or_404(Servicio, id=servicio_id)
@@ -178,7 +211,8 @@ def ver_carrito(request):
                 'nombre': item.producto.nombre, 
                 'precio': item.producto.precio, 
                 'cantidad': item.cantidad, 
-                'total': item.producto.precio * item.cantidad } 
+                'total': item.producto.precio * item.cantidad 
+                } 
                 for item in carrito_items] 
             } 
         return JsonResponse(data) 

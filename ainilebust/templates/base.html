@@ -176,17 +176,6 @@
             $('#carrito-sidebar').removeClass('abierto');
         });
 
-        // Eliminar producto del carrito
-        $('.eliminar').click(function(){
-            var producto_id = $(this).closest('.producto').data('id');
-            $.ajax({
-                url: '{% url "eliminar_del_carrito" 0 %}'.replace('/0/', '/' + producto_id + '/'),
-                type: 'GET',
-                success: function(response){
-                    location.reload();
-                }
-            });
-        });
     </script>
     {% block extra_js %}{% endblock %}
 </body>

@@ -54,14 +54,6 @@ class Reseña(models.Model):
     def __str__(self):
         return f"{self.nombre} - {self.fecha.strftime('%Y-%m-%d')}"
 
-class Producto(models.Model):
-    nombre = models.CharField(max_length=80)
-    descripcion = models.TextField()
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-    imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
-    
-    def __str__(self):
-        return self.nombre
 
 class Disponibilidad(models.Model):
     fecha = models.DateField(unique=True, default=date.today)
@@ -73,11 +65,28 @@ class Disponibilidad(models.Model):
 
     def __str__(self):
         return f"{self.fecha} - {self.estado}"
-
-class Servicio(models.Model):
+    
+class Producto(models.Model):
     nombre = models.CharField(max_length=80)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
+    imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
+    
+    def __str__(self):
+        return self.nombre
+    
+class Servicio(models.Model):
+   
+    CATEGORIA_CHOICES = [
+        ('INSTALACION', 'Instalación'),
+        ('MANTENIMIENTO', 'Mantenimiento'),
+        ('SOPORTETECNICO', 'Soporte Técnico'),
+    ]
+    
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    categoria = models.CharField(max_length=50, choices=CATEGORIA_CHOICES, default='INSTALACION')
     imagen = models.ImageField(upload_to='servicios/', blank=True, null=True)
 
     def __str__(self):
@@ -93,21 +102,21 @@ class Carrito(models.Model):
     def __str__(self):
         return f"Carrito de {self.usuario}"
 
-# Modelo ItemCarrito
+
 class ItemCarrito(models.Model):
     carrito = models.ForeignKey(
         Carrito,
         on_delete=models.CASCADE,
-        related_name="items"  # Esto nos permitirá acceder a los items como carrito.items
+        related_name="items"  
     )
     producto = models.ForeignKey(
-        'Producto',  # Entre comillas si está definido más abajo
+        'Producto',  
         null=True,
         blank=True,
         on_delete=models.CASCADE
     )
     servicio = models.ForeignKey(
-        'Servicio',  # Entre comillas si está definido más abajo
+        'Servicio', 
         null=True,
         blank=True,
         on_delete=models.CASCADE

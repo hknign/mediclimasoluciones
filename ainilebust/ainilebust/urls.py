@@ -24,7 +24,7 @@ from appWeb.views import calendario_admin, calendario_usuario, editar_disponibil
 from django.conf.urls.static import static
 from django.conf import settings
 from appWeb.views import agregar_producto_al_carrito, agregar_servicio_al_carrito,eliminar_item_carrito,ver_carrito, finalizar_compra
-from appWeb.views import logout_view
+from appWeb.views import logout_view, ServicioCreateView
 urlpatterns = [
     path('Registro/', register_view,name='Registro'),
     path('', login_view, name='Login'),
@@ -35,7 +35,7 @@ urlpatterns = [
     path('sobre-nosotros/', sobre_nosotros, name='sobre_nosotros'),
     path('contacto/', contacto, name='contacto'),
     path('agregar_producto/<int:producto_id>/',agregar_producto_al_carrito, name='agregar_producto_al_carrito'),
-    path('agregar_servicio/<int:servicio_id>/',agregar_servicio_al_carrito, name='agregar_servicio_al_carrito'),
+    path('agregar_servicio/<int:servicio_id>/', agregar_servicio_al_carrito, name='agregar_servicio_al_carrito'),
     path('eliminar_item/<int:item_id>/', eliminar_item_carrito, name='eliminar_item_carrito'),
     path('carrito/', ver_carrito, name='ver_carrito'),
     path('finalizar_compra/',finalizar_compra,name='finalizar_compra'),
@@ -47,11 +47,12 @@ urlpatterns = [
     path('editar_producto/', editar_producto, name='editar_producto'),
     path('editar_producto/<int:id>/', editar_producto, name='editar_producto'),
     path('eliminar_producto/<int:id>/',eliminar_producto,name='eliminar_producto'),
+    path('agregar_servicio/', ServicioCreateView.as_view(), name='agregar_servicio'),
     path('prueba/',prueba, name='prueba'),
     path('admin-dashboard/',admin_dashboard, name='admin_dashboard'),
     path('user-dashboard/',user_dashboard, name='user_dashboard'),
     path('editar_disponibilidad/<str:fecha>/', editar_disponibilidad, name='editar_disponibilidad'),
-    path('eliminar_disponibilidad/',eliminar_disponibilidad,name='eliminar_disponibilidad')
+    path('eliminar_disponibilidad/',eliminar_disponibilidad,name='eliminar_disponibilidad'),
 
 
 
