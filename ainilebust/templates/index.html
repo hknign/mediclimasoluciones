@@ -54,15 +54,14 @@
         .hero-section {
             background-size: cover;
             background-position: center;
-            height: 110vh; 
+            max-height: calc(100vh - 64px);
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
             text-align: center;
-            margin-top: -64px;
-            margin-bottom: -64px;
+            overflow: hidden;
         }
 
         .hero-section h1 {
@@ -249,7 +248,6 @@
     
     <nav>
         <ul>
-
             <li><a href="{% url 'index' %}">Inicio</a></li>
             <li>
                 {% if user.is_superuser %}
@@ -261,45 +259,34 @@
             <li><a href="{% url 'servicios' %}">Servicios</a></li>
             <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
             <li>
-                
                 {% if user.is_superuser %}
                     <a href="{% url 'calendario_admin' %}">Gestión Horarios</a>
                 {% else %}
                     <a href="{% url 'calendario_usuario' %}">Horarios</a>
                 {% endif %}
-    
             </li>
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
-            
             <!-- Botón para abrir el carrito -->
-            <button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button>
-            <li>
-                <div class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
-                    <div class="dropdown-options">
-                        {% if user.is_superuser %}
-                            <a href="{% url 'admin_dashboard' %}">Perfil</a>
-                        {% else %}
-                            <a href="{% url 'user_dashboard' %}">Perfil</a>
-                        {% endif %}
-                        <a href="#">Ajustes</a>
-                        {% if user.is_authenticated %}
+            <li><button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button></li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
+                <div class="dropdown-options">
+                    {% if user.is_superuser %}
+                        <a href="{% url 'admin_dashboard' %}">Perfil</a>
+                    {% else %}
+                        <a href="{% url 'user_dashboard' %}">Perfil</a>
+                    {% endif %}
+                    <a href="#">Ajustes</a>
+                    {% if user.is_authenticated %}
                         <form action="{% url 'logout' %}" method="POST">
                             {% csrf_token %}
                             <button type="submit">Cerrar sesión</button>
                         </form>
-
-                        {% else %}
-                        <li>
-                            <a href="{% url 'Login' %}">Iniciar Sesión</a>
-                        </li>
-            
-
-                        {% endif %}
-                    </div>
+                    {% else %}
+                        <a href="{% url 'Login' %}">Iniciar Sesión</a>
+                    {% endif %}
                 </div>
             </li>
-        
         </ul>
     </nav>
 
