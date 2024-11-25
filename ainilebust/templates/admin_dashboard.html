@@ -242,7 +242,12 @@
         .dropdown:hover .dropdown-options { 
             display: block; 
         }
-
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -294,26 +299,28 @@
         </ul>
     </nav>
 
-<h1>Dashboard del Administrador</h1>
+<h1 style="text-align: center;">Dashboard del Administrador</h1>
 
 <!-- Muestra los datos del usuario -->
-<div>
+<div class="container">
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
     <p><strong>Nombre:</strong> {{ user.first_name }}</p>
     <p><strong>Apellido:</strong> {{ user.last_name }}</p>
 
-    <button onclick="showEditForm()">Editar Información</button>
+    <button onclick="showEditForm()" style="text-align: center;">Editar Información</button>
 </div>
 
 <!-- Formulario de edición (oculto inicialmente) -->
 <div id="editForm" style="display: none;">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" onclick="return confirm('¿Estás seguro de que deseas editar tus datos?');">Confirmar Edición</button>
-        <button type="button" onclick="hideEditForm()">Cancelar</button>
-    </form>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" onclick="return confirm('¿Estás seguro de que deseas editar tus datos?');">Confirmar Edición</button>
+            <button type="button" onclick="hideEditForm()">Cancelar</button>
+        </form>
+    </div>
 </div>
 
 <!-- Botón para ir a la página principal -->
