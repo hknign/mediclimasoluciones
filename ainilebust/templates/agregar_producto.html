@@ -327,6 +327,16 @@
         .dropdown:hover .dropdown-options { 
             display: block; 
         }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1, h2, h4, .explanation, .btn-agregar {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -379,19 +389,16 @@
     </nav>
     <br>
     <main>
-        <h1>Añadir Nuevos productos</h1>
-        <h2> Instrucciones</h2>
-
-        <h4>Para ingresar un nuevo producto debe tener en cuenta: </h4>
-        <p class="explanation">Seleccione una imagen que represente el producto. Formatos aceptados: JPG, PNG.</p>
-
-        <p class="explanation">Proporcione una descripción detallada del producto. Máximo 500 caracteres.</p>
-
-        <p class="explanation">Proporcione una descripción detallada del producto. Máximo 500 caracteres.</p>
-
-        <p class="explanation">Proporcione una descripción detallada del producto. Máximo 500 caracteres.</p>
-
-        <button class="btn-agregar">Nuevo Producto</button>
+        <div class="container">
+            <h1>Añadir Nuevos productos</h1>
+            <h2> Instrucciones</h2>
+            <h4>Para ingresar un nuevo producto debe tener en cuenta:</h4>
+            <p class="explanation">Seleccione una imagen que represente el producto. Formatos aceptados: JPG, PNG.</p>
+            <p class="explanation">Proporcione una descripción detallada del producto. Máximo 500 caracteres.</p>
+            <p class="explanation">Proporcione una descripción detallada del producto. Máximo 500 caracteres.</p>
+            <p class="explanation">Proporcione una descripción detallada del producto. Máximo 500 caracteres.</p>
+            <button class="btn-agregar">Nuevo Producto</button>
+        </div>
         <a class="btn-volver" href="{% url 'prueba' %}">Volver</a>
         <div id="myModal" class="modal">
             <div class="modal-content">
