@@ -10,16 +10,185 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
+        }
+
+        header {
+            background-color: #004d40;
+            padding: 10px 0;
+            color: white;
+            text-align: center;
+        }
+
+        header img {
+            width: 150px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #00695c;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #004d40;
+        }
+
+        .card {
+            transition: transform 0.3s;
+            margin-bottom: 30px;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        footer {
+            background-color: #004d40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer .social-logo {
+            width: 40px;
+            margin: 0 10px;
+            transition: transform 0.3s;
+        }
+
+        footer .social-logo:hover {
+            transform: scale(1.2);
+        }
+        h6{
+            margin-bottom: 300px;
+        }
+        .slogan{
+            margin-bottom: 100px;
+
+        }
+        .logo {
+            width: 75px; 
+            height: 75px; 
+            border-radius: 50%; 
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+        #carrito-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px; /* Ancho del carrito, ajusta según lo necesites */
+            height: 100%; /* Alto completo de la página */
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda para destacarlo */
+            z-index: 1000;
+            overflow-y: auto; /* Permite el desplazamiento si hay muchos productos */
+        }
+
+        #carrito-popup .carrito-contenido {
+            margin-top: 20px;
+        }
+
+        .producto-carrito {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .producto-carrito img {
+            max-width: 80px; /* Ajusta el tamaño de las imágenes */
+            margin-right: 20px;
+        }
+
+        .producto-carrito h3 {
+            font-size: 1.2em;
+        }
+
+        .producto-carrito p {
+            margin: 5px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Botón para mostrar el carrito (si lo necesitas en el sitio) */
+        #mostrar-carrito-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #mostrar-carrito-btn:hover {
+            background-color: #218838;
+        }
+        .dropdown { 
+            position: relative; 
+            display: inline-block; 
+        } 
+        .dropdown-options { 
+            display: none; 
+            position: absolute; 
+            background-color: white; 
+            min-width: 160px; 
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
+            z-index: 1; 
+        } 
+        .dropdown-options a { 
+            color: black; 
+            padding: 12px 16px; 
+            text-decoration: none; display: block; 
+        } 
+        .dropdown-options a:hover {
+            background-color: #f1f1f1;
+        } 
+        .dropdown:hover .dropdown-options { 
+            display: block; 
         }
 
         .section-title {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #004d99;
         }
 
         .section-description {
@@ -58,7 +227,7 @@
         }
 
         .btn-primary {
-            background-color: #004d99;
+            background-color: #218838;
             border: none;
             padding: 10px 20px;
             border-radius: 25px;
@@ -66,12 +235,11 @@
         }
 
         .btn-primary:hover {
-            background-color: #003366;
+            background-color: #218838;
             color: #fff;
         }
 
         #servicios {
-            background: #eaf3ff;
             padding: 50px 15px;
             border-radius: 15px;
         }
@@ -85,60 +253,94 @@
                 height: 150px;
             }
         }
-
-        header {
-            background-color: #004d99;
-            color: #fff;
-            padding: 15px;
+        
+        .btn-eliminar {
+            background-color: transparent;
+            border: none;
+            color: red;  
+            font-size: 12px; 
+            cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
         }
 
-        header .logo {
-            height: 50px;
+        .btn-eliminar:hover {
+            color: darkred;  
         }
 
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            gap: 20px;
-        }
 
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-        }
 
-        .search-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background-color: #fff;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .titulo-servicios {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #004d99;
-        }
     </style>
 </head>
 <body>
     <header>
         <img src="{% static 'imagenes/logo.png' %}" alt="Logo Mediclimasoluciones" class="logo">
-        <nav>
-            <ul>
-                <li><a href="{% url 'index' %}">Inicio</a></li>
-
-            </ul>
-        </nav>
     </header>
+    
+    <nav>
+        <ul>
+
+            <li><a href="{% url 'index' %}">Inicio</a></li>
+            <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'prueba' %}">Gestión Productos</a>
+                {% else %}
+                    <a href="{% url 'productos' %}">Productos</a>
+                {% endif %}
+            </li>
+
+            <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'servicios' %}">Gestión Servicios</a>
+                {% else %}
+                    <a href="{% url 'servicios' %}">Servicios</a>
+                {% endif %}
+
+            </li>
+            <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
+            <li>
+                
+                {% if user.is_superuser %}
+                    <a href="{% url 'calendario_admin' %}">Gestión Horarios</a>
+                {% else %}
+                    <a href="{% url 'calendario_usuario' %}">Horarios</a>
+                {% endif %}
+    
+            </li>
+            <li><a href="{% url 'contacto' %}">Contacto</a></li>
+            
+            <!-- Botón para abrir el carrito -->
+            <button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button>
+            <li>
+                <div class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
+                    <div class="dropdown-options">
+                        {% if user.is_superuser %}
+                            <a href="{% url 'admin_dashboard' %}">Perfil</a>
+                        {% else %}
+                            <a href="{% url 'user_dashboard' %}">Perfil</a>
+                        {% endif %}
+                        <a href="#">Ajustes</a>
+                        {% if user.is_authenticated %}
+                        <form action="{% url 'logout' %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit">Cerrar sesión</button>
+                        </form>
+
+                        {% else %}
+                        <li>
+                            <a href="{% url 'Login' %}">Iniciar Sesión</a>
+                        </li>
+            
+
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+        
+        </ul>
+    </nav>
     <section id="servicios" class="container my-5">
         <div class="text-center mb-5">
             <h2 class="section-title">Nuestros Servicios</h2>
@@ -241,22 +443,37 @@
                     <td>{{ servicio.nombre }}</td>
                     <td>{{ servicio.descripcion }}</td>
                     <td>${{ servicio.precio }}</td>
-                    <td>{{ servicio.categoria}}</td>
+                    <td>{{ servicio.categoria }}</td>
                     <td>
                         {% if user.is_superuser %}
-                           
+                            <!-- Código para superuser -->
                         {% else %}
-                            <button id="btn-agregar" class="btn btn-primary btn-sm btn-agregar" data-servicio-id="{{ servicio.id }}" data-servicio-nombre="{{ servicio.nombre }}" data-servicio-precio="{{ servicio.precio }}">
-                                Agregar al carrito
-                            </button>
+                            <form action="{% url 'agregar_servicio_al_carrito' servicio.id %}" method="post">
+                                {% csrf_token %}
+                
+                                <button id="btn-agregar" class="btn btn-primary btn-sm btn-agregar" type="submit" data-servicio-id="{{ servicio.id }}" data-servicio-nombre="{{ servicio.nombre }}" data-servicio-precio="{{ servicio.precio }}">
+                                    Agregar al carrito
+                                </button>
+                            </form>
                         {% endif %}
                     </td>
+                    
                     {% if user.is_superuser %}
                     <td>
                         <a class="btn btn-primary btn-sm" href="#">Editar Servicio</a>
                     </td>
                     <td>
-                        <a class="btn btn-primary btn-sm" href="#">Eliminar Servicio</a>
+                        <form action="{% url 'eliminar_servicio' servicio.id %}" method="post" class="btn-eliminar-form" onsubmit="return confirmarEliminacion();">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-eliminar">Eliminar &#10060;</button>
+                        </form>
+            
+                        
+                        <script>
+                            function confirmarEliminacion() {
+                                return confirm("¿Estás seguro de que deseas eliminar este servicio?");
+                            }
+                        </script>
                     </td>
                     {% endif %}
                 </tr>
@@ -314,7 +531,7 @@
         </div>
     </div>
 
-
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         document.getElementById('search').addEventListener('input', function() {
@@ -345,8 +562,6 @@
             const servicioId = this.getAttribute('data-servicio-id');
             const servicioNombre = this.getAttribute('data-servicio-nombre');
             const servicioPrecio = this.getAttribute('data-servicio-precio');
-            const servicioCategoria=this.getAttribute('data-servicio-categoria');
-            const servicioImagen = this.getAttribute('data-servicio-imagen');
 
             // Enviar el servicio al backend para agregarlo al carrito
             fetch('/agregar_servicio/', {
@@ -358,9 +573,7 @@
                 body: JSON.stringify({
                     servicio_id: servicioId,
                     nombre: servicioNombre,
-                    precio: servicioPrecio,
-                    categoria:servicioCategoria,
-                    imagen:servicioImagen,
+                    precio: servicioPrecio
                 })
             })
             .then(response => response.json())
@@ -373,6 +586,133 @@
             });
         });
     });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Mostrar el carrito (popup)
+        function mostrarCarrito() {
+            cargarCarrito(); // Cargar los datos del carrito
+            const carrito = document.getElementById('carrito-popup');
+            carrito.style.display = 'block'; // Mostrar el carrito
+        }
+
+        // Cerrar el carrito (popup)
+        function cerrarCarrito() {
+            const carrito = document.getElementById('carrito-popup');
+            carrito.style.display = 'none'; // Ocultar el carrito
+        }
+
+        // Cargar los productos del carrito desde el backend
+        function cargarCarrito() {
+            fetch('/carrito/')
+                .then(response => response.json())
+                .then(data => {
+                    const carritoContenido = document.getElementById('contenido-carrito');
+                    const totalCarrito = document.getElementById('total-carrito');
+                    carritoContenido.innerHTML = ''; // Limpia el contenido actual
+                    let total = 0;
+
+                    if (data.carrito_items && data.carrito_items.length > 0) {
+                        data.carrito_items.forEach(item => {
+                            const productoDiv = document.createElement('div');
+                            productoDiv.classList.add('producto-carrito');
+                            productoDiv.innerHTML = `
+                                <img src="${item.imagen_url || 'placeholder.jpg'}" alt="${item.nombre}" style="max-width: 80px;">
+                                <div>
+                                    <h3>${item.nombre}</h3>
+                                    <p>Precio: $${item.precio}</p>
+                                    <p>Cantidad: ${item.cantidad}</p>
+                                </div>
+                                <button class="btn btn-danger" onclick="eliminarProducto(${item.id})">Eliminar</button>
+                            `;
+                            carritoContenido.appendChild(productoDiv);
+                            total += item.precio * item.cantidad; // Calcula el total
+                        });
+                    } else {
+                        carritoContenido.innerHTML = '<p>El carrito está vacío.</p>';
+                    }
+                    totalCarrito.textContent = `$${total.toFixed(2)}`; // Actualiza el total
+                })
+                .catch(error => console.error('Error al cargar el carrito:', error));
+        }
+
+        // Agregar un producto al carrito
+        function agregarAlCarrito(productoId) {
+            fetch(`/agregar_producto/${productoId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        cargarCarrito(); // Recarga el carrito automáticamente
+                    } else {
+                        console.error('Error al agregar el producto');
+                    }
+                })
+                .catch(error => console.error('Error al agregar al carrito:', error));
+        }
+
+        // Eliminar un producto del carrito
+        function eliminarProducto(productoId) {
+            fetch(`/eliminar-producto/${productoId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        cargarCarrito(); // Recarga el carrito automáticamente
+                    } else {
+                        console.error('Error al eliminar el producto');
+                    }
+                })
+                .catch(error => console.error('Error al eliminar del carrito:', error));
+        }
+
+        // Finalizar la compra
+        function finalizarCompra() {
+            alert('¡Gracias por tu compra!');
+            fetch('/ruta-de-finalizar-compra/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        cerrarCarrito();
+                        cargarCarrito(); // Limpia el carrito tras la compra
+                    } else {
+                        console.error('Error al finalizar la compra');
+                    }
+                })
+                .catch(error => console.error('Error al finalizar la compra:', error));
+        }
+
+        // Mostrar el carrito al hacer clic en el botón
+        document.getElementById('carritoBtn').addEventListener('click', mostrarCarrito);
+
+        // Cerrar el carrito al hacer clic en el botón
+        document.getElementById('cerrarPopup').addEventListener('click', cerrarCarrito);
+
     </script>
 </body>
 </html>

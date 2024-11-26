@@ -2,11 +2,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from datetime import date
 from django.conf import settings
-from django.contrib.auth import get_user_model 
+from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 def get_default_user():
-    User = get_user_model() 
-    return User.objects.first().id
+    User = get_user_model()
+    return User.objects.first().id if User.objects.exists() else None
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -15,8 +17,8 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
-        user.is_staff = False 
-        user.is_superuser = False
+        user.is_staff = extra_fields.get('is_staff', False)
+        user.is_superuser = extra_fields.get('is_superuser', False)
         user.save(using=self._db)
         return user
 
@@ -35,7 +37,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)  # Default should be False for regular users
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -54,7 +56,6 @@ class Reseña(models.Model):
     def __str__(self):
         return f"{self.nombre} - {self.fecha.strftime('%Y-%m-%d')}"
 
-
 class Disponibilidad(models.Model):
     fecha = models.DateField(unique=True, default=date.today)
     estado = models.CharField(max_length=50, choices=[
@@ -65,24 +66,23 @@ class Disponibilidad(models.Model):
 
     def __str__(self):
         return f"{self.fecha} - {self.estado}"
-    
+
 class Producto(models.Model):
     nombre = models.CharField(max_length=80)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
-    
+
     def __str__(self):
         return self.nombre
-    
+
 class Servicio(models.Model):
-   
     CATEGORIA_CHOICES = [
         ('INSTALACION', 'Instalación'),
         ('MANTENIMIENTO', 'Mantenimiento'),
         ('SOPORTETECNICO', 'Soporte Técnico'),
     ]
-    
+
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
@@ -91,7 +91,7 @@ class Servicio(models.Model):
 
     def __str__(self):
         return self.nombre
-    
+
 class Carrito(models.Model):
     usuario = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -100,28 +100,30 @@ class Carrito(models.Model):
     )
 
     def __str__(self):
-        return f"Carrito de {self.usuario}"
-
+        return f"Carrito de {self.usuario.email}"
 
 class ItemCarrito(models.Model):
-    carrito = models.ForeignKey(
-        Carrito,
-        on_delete=models.CASCADE,
-        related_name="items"  
-    )
+    carrito = models.ForeignKey(Carrito, related_name='items', on_delete=models.CASCADE)
     producto = models.ForeignKey(
-        'Producto',  
+        'Producto',
         null=True,
         blank=True,
         on_delete=models.CASCADE
     )
     servicio = models.ForeignKey(
-        'Servicio', 
+        'Servicio',
         null=True,
         blank=True,
         on_delete=models.CASCADE
     )
     cantidad = models.PositiveIntegerField(default=1)
+
+    def save(self, *args, **kwargs):
+        if self.producto:
+            self.servicio = None
+        elif self.servicio:
+            self.producto = None
+        super(ItemCarrito, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.producto if self.producto else self.servicio} - {self.cantidad}"

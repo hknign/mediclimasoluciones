@@ -142,27 +142,44 @@
                 <a href="#"><i class="fab fa-linkedin-in"></i></a>
             </div>
         </div>
-        
         <div class="contact-form">
             <h3>Agenda una cita especial con el técnico</h3>
             <p>Para ayudarte a tomar la mejor elección no dudes en contactarnos.</p>
-            <form>
+            <form onsubmit="return enviarCorreo();">
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" placeholder="Tu nombre">
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Tu nombre" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Tu email">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Tu email" required>
                 </div>
                 <div class="form-group">
                     <label for="mensaje">Mensaje</label>
-                    <textarea class="form-control" id="mensaje" rows="3" placeholder="Tu mensaje"></textarea>
+                    <textarea class="form-control" id="mensaje" name="mensaje" rows="3" placeholder="Tu mensaje" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-submit btn-block">Quiero una reunión</button>
             </form>
         </div>
-    </div>
+        
+        <script>
+        function enviarCorreo() {
+            var nombre = document.getElementById('nombre').value;
+            var email = document.getElementById('email').value;
+            var mensaje = document.getElementById('mensaje').value;
+        
+            var asunto = encodeURIComponent('Nueva cita solicitada');
+            var cuerpo = encodeURIComponent('Nombre: ' + nombre + '\nEmail: ' + email + '\nMensaje: ' + mensaje);
+        
+            var mailtoLink = 'mailto:sebastian.isaac04@gmail.com?subject=' + asunto + '&body=' + cuerpo;
+            window.location.href = mailtoLink;
+        
+            return false;  // Prevenir el envío del formulario por defecto
+        }
+        </script>
+        
+        
+        
 </section>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

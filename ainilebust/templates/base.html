@@ -153,7 +153,51 @@
             $('#finalizarCompra').on('click', function() {
                 window.location.href = '{% url "finalizar_compra" %}';
             });
+            
         });
+        // Obtener el token CSRF del DOM
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Función para agregar al carrito
+        function agregarAlCarrito(servicioId, servicioNombre, servicioPrecio, servicioCategoria, servicioImagen) {
+            fetch('/agregar_servicio/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken  // Utiliza el token CSRF
+                },
+                body: JSON.stringify({
+                    servicio_id: servicioId,
+                    nombre: servicioNombre,
+                    precio: servicioPrecio,
+                    categoria: servicioCategoria,
+                    imagen: servicioImagen
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);  // Mostrar un mensaje si el servicio se agrega correctamente
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un error al agregar el servicio al carrito');
+            });
+        }
+
+        // Asignar evento de clic a los botones de agregar
+        document.querySelectorAll('.btn-agregar').forEach(button => {
+            button.addEventListener('click', function() {
+                const servicioId = this.getAttribute('data-servicio-id');
+                const servicioNombre = this.getAttribute('data-servicio-nombre');
+                const servicioPrecio = this.getAttribute('data-servicio-precio');
+                const servicioCategoria = this.getAttribute('data-servicio-categoria'); // Añadir atributo de categoría
+                const servicioImagen = this.getAttribute('data-servicio-imagen'); // Añadir atributo de imagen
+
+                agregarAlCarrito(servicioId, servicioNombre, servicioPrecio, servicioCategoria, servicioImagen);
+            });
+        });
+</script>
+
     </script>
     
     <!-- Contenido de la página -->
@@ -176,6 +220,7 @@
             $('#carrito-sidebar').removeClass('abierto');
         });
 
+        
     </script>
     {% block extra_js %}{% endblock %}
 </body>

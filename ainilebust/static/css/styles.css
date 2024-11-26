@@ -75,3 +75,55 @@ footer {
     bottom: 0;
     width: 100%;
 }
+/* Botón para mostrar el carrito */
+#mostrar-carrito-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#mostrar-carrito-btn:hover {
+    background-color: #218838;
+}
+
+.carrito-popup {
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 400px;
+    height: 100%;
+    overflow: auto;
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.carrito-popup-content {
+    padding: 20px;
+}
+
+.carrito-popup .close {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#contenidoCarrito {
+    padding: 10px;
+}
+
+#totalCarrito {
+    padding: 10px;
+    font-weight: bold;
+}

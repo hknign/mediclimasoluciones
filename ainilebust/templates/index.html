@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load extra_filters %}
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +9,9 @@
     <link rel="icon" href="{% static 'imagenes/Icono-mediclimas.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/script.js' %}" defer></script>
 
     <style>
         body {
@@ -136,47 +139,6 @@
             display: block;
             margin: 0 auto;
         }
-        #carrito-popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 300px; /* Ancho del carrito, ajusta según lo necesites */
-            height: 100%; /* Alto completo de la página */
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda para destacarlo */
-            z-index: 1000;
-            overflow-y: auto; /* Permite el desplazamiento si hay muchos productos */
-        }
-
-        #carrito-popup .carrito-contenido {
-            margin-top: 20px;
-        }
-
-        .producto-carrito {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-
-        .producto-carrito img {
-            max-width: 80px; /* Ajusta el tamaño de las imágenes */
-            margin-right: 20px;
-        }
-
-        .producto-carrito h3 {
-            font-size: 1.2em;
-        }
-
-        .producto-carrito p {
-            margin: 5px 0;
-        }
 
         button {
             padding: 10px 20px;
@@ -192,22 +154,7 @@
             background-color: #218838;
         }
 
-        /* Botón para mostrar el carrito (si lo necesitas en el sitio) */
-        #mostrar-carrito-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #mostrar-carrito-btn:hover {
-            background-color: #218838;
-        }
+     
         .dropdown { 
             position: relative; 
             display: inline-block; 
@@ -232,8 +179,177 @@
             display: block; 
         }
 
+
+        /* Estilo para centrar el popup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-dialog {
+            margin: 10% auto;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+
+        .btn i {
+            font-size: 1.2rem;
+        }
+
+        .btn-success {
+            width: 100%;
+        }
+
+        .modal-footer {
+            justify-content: space-between;
+        }
+        .btn {
+            margin-right: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .producto-carrito {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .producto-carrito img {
+            margin-right: 10px;
+        }
+
+        #total-carrito {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        /* Contenedor de las tarjetas */
+        .d-flex.flex-wrap {
+            gap: 10px; /* Espacio entre tarjetas */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Tarjetas generales */
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animación suave */
+            border: 2px solid #ddd; /* Borde inicial */
+            border-radius: 8px; /* Bordes redondeados */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+        }
+
+        .card:hover {
+            transform: translateY(-5px); /* Elevación al pasar el mouse */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+            border-color: #28a745; /* Borde verde al hover */
+            cursor: pointer;
+        }
+
+        /* Texto de las tarjetas */
+        .card .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card .card-text {
+            font-size: 14px;
+            color: #28a745; /* Color verde para disponibles */
+        }
+
+        /* Tarjeta seleccionada */
+        .card.seleccionada {
+            border-color: #007bff !important; /* Borde azul */
+            background-color: #e9f7fe; /* Fondo azul claro */
+            color: #004085; /* Texto azul oscuro */
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Sombra azul */
+        }
+        .popup-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-height: 80%;
+            overflow-y: auto;
+            position: relative;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .popup-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .day {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .day:hover {
+            background-color: #e0e0e0;
+        }
+
+        .disponible {
+            background-color: #c8e6c9; /* Color de fondo para los días disponibles */
+        }
+
     </style>
-</head><body>
+</head>
+<body>
     <header>
         <img src="{% static 'imagenes/logo.png' %}" alt="Logo Mediclimasoluciones" class="logo">
     </header>
@@ -249,7 +365,15 @@
                     <a href="{% url 'productos' %}">Productos</a>
                 {% endif %}
             </li>
-            <li><a href="{% url 'servicios' %}">Servicios</a></li>
+
+            <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'servicios' %}">Gestión Servicios</a>
+                {% else %}
+                    <a href="{% url 'servicios' %}">Servicios</a>
+                {% endif %}
+
+            </li>
             <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
             <li>
                 
@@ -292,7 +416,164 @@
             </li>
         
         </ul>
-    </nav>
+    </nav> 
+
+
+    <div id="carrito-popup" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tu Carrito</h5>
+                    <button type="button" class="close" id="cerrar-carrito" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-bordered text-center">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Producto/Servicio</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Precio Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if cart %}
+                                {% for item_id, item_data in cart %}
+                                <tr>
+                                    <td>{{ item_data.type }} - ID {{ item_id }}</td>
+                                    <td>
+                                        <form action="{% url 'add_to_cart' item_id item_data.type %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="number" name="quantity" value="{{ item_data.quantity }}" min="1" class="form-control form-control-sm mx-auto" style="width: 70px;">
+                                            <button type="submit" class="btn btn-success btn-sm mt-1">Actualizar</button>
+                                        </form>
+                                    </td>
+                                    <td>${{ item_data.price }}</td>
+                                    <td>${{ item_data.quantity|floatformat:2 }}</td>
+                                    <td>
+                                        <a href="{% url 'decrement_from_cart' item_id item_data.type %}" class="btn btn-info btn-sm" title="Disminuir">
+                                            <i class="bi bi-dash-circle"></i>
+                                        </a>
+                                        <a href="{% url 'remove_from_cart' item_id item_data.type %}" class="btn btn-danger btn-sm" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="3" class="text-right font-weight-bold">Total:</td>
+                                    <td colspan="2">${{ cart.get_total_price|floatformat:2 }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">El carrito está vacío.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button id="realizar-presupuesto" class="btn btn-primary">Realizar Presupuestación</button>
+                    <button type="button" class="btn btn-secondary" id="cerrar-carrito-footer">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function mostrarCarrito() {
+            $('#carrito-popup').modal('show'); // Mostrar el modal del carrito
+        }
+        
+        $(document).ready(function(){
+            // Cerrar el carrito al presionar los botones de cierre
+            $('#cerrar-carrito, #cerrar-carrito-footer').click(function() {
+                $('#carrito-popup').modal('hide');
+            });
+        });
+      
+        document.getElementById('seleccionar-dia-btn').onclick = function() {
+            document.getElementById('popup-container').style.display = 'block';
+            // Aquí cargarás los días disponibles usando AJAX
+            cargarDiasDisponibles();
+        };
+    
+        document.getElementById('close-popup').onclick = function() {
+            document.getElementById('popup-container').style.display = 'none';
+        };
+    
+        function cargarDiasDisponibles() {
+            // Realiza una petición AJAX para obtener los días disponibles
+            fetch("{% url 'dias_disponibles' %}")
+                .then(response => response.json())
+                .then(data => {
+                    const popupContent = document.getElementById('popup-content');
+                    popupContent.innerHTML = ''; // Limpiar el contenido previo
+                    data.forEach(dia => {
+                        const diaDiv = document.createElement('div');
+                        diaDiv.className = 'day disponible';
+                        diaDiv.innerHTML = `
+                            <span>${dia.fecha}</span>
+                            <div class="estado">${dia.estado}</div>
+                        `;
+                        diaDiv.onclick = function() {
+                            // Aquí puedes manejar el evento cuando se selecciona un día
+                            seleccionarDia(dia.fecha);
+                        };
+                        popupContent.appendChild(diaDiv);
+                    });
+                });
+        }
+    
+        function seleccionarDia(fecha) {
+            // Aquí pu    function seleccionarDia(fecha) {
+        // Aquí puedes manejar la selección del día y cerrar el popup
+        document.getElementById('popup-container').style.display = 'none';
+        console.log('Día seleccionado:', fecha);
+        // Redirigir o actualizar la página según sea necesario
+        }
+  
+
+    
+
+        // Función para abrir el carrito
+        document.getElementById("btn-carrito").onclick = function() {
+            document.getElementById("carrito-popup").style.display = "block";
+        };
+
+        // Función para cerrar el carrito
+        document.getElementById("cerrar-carrito").onclick = function() {
+            document.getElementById("carrito-popup").style.display = "none";
+        };
+
+        // Cerrar el carrito cuando se haga clic fuera del contenido
+        window.onclick = function(event) {
+            if (event.target === document.getElementById("carrito-popup")) {
+                document.getElementById("carrito-popup").style.display = "none";
+            }
+        };
+        function actualizarTotal() {
+        fetch("{% url 'get_total_price_view' %}")  // Ajusta la URL según tu configuración
+            .then(response => response.json())
+            .then(data => {
+                const totalElement = document.getElementById('total_carrito');
+                totalElement.textContent = `$${data.total_carrito.toFixed(2)}`;
+            })
+            .catch(error => console.error('Error al actualizar el total:', error));
+    }
+
+        // Ejemplo: Llama a esta función después de cualquier acción en el carrito
+        document.addEventListener('DOMContentLoaded', function() {
+            actualizarTotal(); // Actualiza al cargar
+        });
+    </script>
+
+
+   <script src="{% static 'js/scripts.js' %}"></script>
+
 
     <section class="hero-section" id="inicio">
         <div>
@@ -301,29 +582,17 @@
             <a href="{% url 'productos' %}" class="btn btn-primary btn-lg">Nuestros Productos</a>
         </div>
     </section>
-
-
     <footer>
 
         <p>&copy; 2024 Mediclimasoluciones. Todos los derechos reservados.</p>
         <div>
-            <a href="https://facebook.com"><img src="{% static 'imagenes/facebook.png' %}" alt="Facebook" class="social-logo"></a>
-            <a href="https://whatsapp.com"><img src="{% static 'imagenes/WhatsApp.png' %}" alt="WhatsApp" class="social-logo"></a>
+            <a href="https://www.facebook.com/profile.php?id=61563154568439"><img src="{% static 'imagenes/facebook.png' %}" alt="Facebook" class="social-logo"></a>
+            <a href="https://wa.me/56951409216"><img src="{% static 'imagenes/WhatsApp.png' %}" alt="WhatsApp" class="social-logo"></a>
             <a href="https://instagram.com"><img src="{% static 'imagenes/logo-instagram-1080p.png' %}" alt="Instagram" class="social-logo"></a>
         </div>
     </footer>
+    
 
-    <div id="carrito-popup">
-        <h2>Mi Carrito</h2>
-        <div id="contenido-carrito">
-            <!-- Aquí se cargarán los productos dinámicamente -->
-        </div>
-        <div class="carrito-total">
-            <h3>Total: <span id="total-carrito">$0</span></h3>
-        </div>
-        <button onclick="finalizarCompra()" class="btn btn-success">Finalizar Compra</button>
-        <button onclick="cerrarCarrito()" class="btn btn-secondary">Cerrar Carrito</button>
-    </div>
     
 
 
@@ -344,91 +613,7 @@
             return cookieValue;
         }
 
-        // Mostrar el carrito (popup)
-        function mostrarCarrito() {
-            cargarCarrito(); // Cargar los datos del carrito
-            const carrito = document.getElementById('carrito-popup');
-            carrito.style.display = 'block'; // Mostrar el carrito
-        }
-
-        // Cerrar el carrito (popup)
-        function cerrarCarrito() {
-            const carrito = document.getElementById('carrito-popup');
-            carrito.style.display = 'none'; // Ocultar el carrito
-        }
-
-        // Cargar los productos del carrito desde el backend
-        function cargarCarrito() {
-            fetch('/carrito/')
-                .then(response => response.json())
-                .then(data => {
-                    const carritoContenido = document.getElementById('contenido-carrito');
-                    const totalCarrito = document.getElementById('total-carrito');
-                    carritoContenido.innerHTML = ''; // Limpia el contenido actual
-                    let total = 0;
-
-                    if (data.carrito_items && data.carrito_items.length > 0) {
-                        data.carrito_items.forEach(item => {
-                            const productoDiv = document.createElement('div');
-                            productoDiv.classList.add('producto-carrito');
-                            productoDiv.innerHTML = `
-                                <img src="${item.imagen_url || 'placeholder.jpg'}" alt="${item.nombre}" style="max-width: 80px;">
-                                <div>
-                                    <h3>${item.nombre}</h3>
-                                    <p>Precio: $${item.precio}</p>
-                                    <p>Cantidad: ${item.cantidad}</p>
-                                </div>
-                                <button class="btn btn-danger" onclick="eliminarProducto(${item.id})">Eliminar</button>
-                            `;
-                            carritoContenido.appendChild(productoDiv);
-                            total += item.precio * item.cantidad; // Calcula el total
-                        });
-                    } else {
-                        carritoContenido.innerHTML = '<p>El carrito está vacío.</p>';
-                    }
-                    totalCarrito.textContent = `$${total.toFixed(2)}`; // Actualiza el total
-                })
-                .catch(error => console.error('Error al cargar el carrito:', error));
-        }
-
-        // Agregar un producto al carrito
-        function agregarAlCarrito(productoId) {
-            fetch(`/agregar_producto/${productoId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then(response => {
-                    if (response.ok) {
-                        cargarCarrito(); // Recarga el carrito automáticamente
-                    } else {
-                        console.error('Error al agregar el producto');
-                    }
-                })
-                .catch(error => console.error('Error al agregar al carrito:', error));
-        }
-
-        // Eliminar un producto del carrito
-        function eliminarProducto(productoId) {
-            fetch(`/eliminar-producto/${productoId}/`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then(response => {
-                    if (response.ok) {
-                        cargarCarrito(); // Recarga el carrito automáticamente
-                    } else {
-                        console.error('Error al eliminar el producto');
-                    }
-                })
-                .catch(error => console.error('Error al eliminar del carrito:', error));
-        }
-
+  
         // Finalizar la compra
         function finalizarCompra() {
             alert('¡Gracias por tu compra!');
@@ -448,12 +633,6 @@
                 })
                 .catch(error => console.error('Error al finalizar la compra:', error));
         }
-
-        // Mostrar el carrito al hacer clic en el botón
-        document.getElementById('carritoBtn').addEventListener('click', mostrarCarrito);
-
-        // Cerrar el carrito al hacer clic en el botón
-        document.getElementById('cerrarPopup').addEventListener('click', cerrarCarrito);
 
     </script>
 
