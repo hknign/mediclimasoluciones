@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Sobre Nosotros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .cancel-btn {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .cancel-btn:hover {
+            background-color: #a71d2a;
+        }
+    </style>
+    <script>
+        function guardarCambios(event) {
+            event.preventDefault(); // Evita el envío estándar del formulario
+            const formData = new FormData(event.target);
+    
+            fetch(event.target.action, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest" // Indica que es una solicitud AJAX
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // Muestra un mensaje de éxito
+                    alert(data.message);
+    
+                    // Verifica si la ventana principal está disponible
+                    if (window.opener && !window.opener.closed) {
+                        // Actualiza el contenido del párrafo en el template principal
+                        const parrafo = window.opener.document.getElementById("contenido-parrafo");
+                        if (parrafo) {
+                            parrafo.textContent = data.contenido_actualizado; // Cambia el texto del párrafo
+                        }
+                    }
+    
+                    // Cierra la ventana de edición
+                    window.close();
+                } else {
+                    alert(data.message); // Muestra el mensaje de error
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Editar Sobre Nosotros</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="contenido">Contenido:</label>
+            {{ form.contenido.errors }}
+            {{ form.contenido }}
+            <div style="display: flex; gap: 10px;">
+                <button type="submit">Guardar Cambios</button>
+                <button type="button" class="cancel-btn" onclick="history.back()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -3,8 +3,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from datetime import date
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
+
+
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 def get_default_user():
     User = get_user_model()
@@ -47,14 +49,22 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+
 class Reseña(models.Model):
     nombre = models.CharField(max_length=100)
     email = models.EmailField()
     comentario = models.TextField()
     fecha = models.DateTimeField(auto_now_add=True)
+    valoracion = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        default=3,  # Valor predeterminado para filas existentes
+        help_text="La valoración debe estar entre 1 y 5."
+    )
+
 
     def __str__(self):
-        return f"{self.nombre} - {self.fecha.strftime('%Y-%m-%d')}"
+        return f"{self.nombre} - {self.fecha.strftime('%Y-%m-%d')} - {self.valoracion} estrellas"
+
 
 class Disponibilidad(models.Model):
     fecha = models.DateField(unique=True, default=date.today)
@@ -72,6 +82,7 @@ class Producto(models.Model):
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
+    favorito = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre
@@ -127,3 +138,23 @@ class ItemCarrito(models.Model):
 
     def __str__(self):
         return f"{self.producto if self.producto else self.servicio} - {self.cantidad}"
+
+class SobreNosotros(models.Model):
+    contenido = models.TextField(default="En Mediclimasoluciones, nos especializamos en la venta, instalación y mantenimiento de equipos médicos de alta calidad de la marca BIOBASE.")
+
+    def __str__(self):
+        return "Sobre Nosotros"
+
+class Pregunta(models.Model):
+    autor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # Relación con el modelo de usuario
+        on_delete=models.SET_NULL,  # Si el autor es eliminado, se pone como NULL
+        null=True,
+        blank=True
+    )
+    contenido = models.TextField()  # Contenido de la pregunta
+    respuesta = models.TextField(null=True, blank=True)  # Respuesta a la pregunta
+    fecha = models.DateTimeField(auto_now_add=True)  # Fecha de la pregunta
+
+    def __str__(self):
+        return self.contenido[:50]

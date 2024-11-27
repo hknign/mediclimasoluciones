@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos - Mediclimasoluciones</title>
     <link rel="icon" href="{% static 'imagenes/Icono-mediclimas.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> 
+    
     <style>
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -93,13 +96,13 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 300px; /* Ancho del carrito, ajusta según lo necesites */
-            height: 100%; /* Alto completo de la página */
+            width: 300px; 
+            height: 100%; 
             background-color: #fff;
             padding: 20px;
-            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda para destacarlo */
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); 
             z-index: 1000;
-            overflow-y: auto; /* Permite el desplazamiento si hay muchos productos */
+            overflow-y: auto; 
         }
 
         #carrito-popup .carrito-contenido {
@@ -118,7 +121,7 @@
         }
 
         .producto-carrito img {
-            max-width: 80px; /* Ajusta el tamaño de las imágenes */
+            max-width: 80px; 
             margin-right: 20px;
         }
 
@@ -144,7 +147,7 @@
             background-color: #218838;
         }
 
-        /* Botón para mostrar el carrito (si lo necesitas en el sitio) */
+
         #mostrar-carrito-btn {
             position: fixed;
             top: 20px;
@@ -268,6 +271,8 @@
             background-color: #28a745;
             color: #004d40;
         }
+
+
     </style>
 </head>
 <body>
@@ -298,9 +303,7 @@
     
             </li>
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
-            
-            <!-- Botón para abrir el carrito -->
-            <button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button>
+   
             <li>
                 <div class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
@@ -331,18 +334,18 @@
         </ul>
     </nav>
     <main>
-        <!-- Buscar productos -->
-        <section id="buscar-productos" class="search-section">
-            <input type="text" id="search" placeholder="Buscar...">
-            <select id="filtros">
-                <option value="todos">Todos</option>
-                <option value="categoria1">Categoría 1</option>
-                <option value="categoria2">Categoría 2</option>
-            </select>
+        <section id="buscar-productos" class="search-section" >
+            <input type="text" id="search" placeholder="Buscar..."> 
+            <select id="filtros" > 
+                <option value="todos">Todos</option> 
+            </select> 
         </section>
+
         <section id="listado-productos">
             {% for producto in productos %}
             <div class="producto">
+               
+
                 <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="producto-imagen">
                 <div class="producto-detalles">
                     <h3>{{ producto.nombre }}</h3>
@@ -352,13 +355,18 @@
                         {% csrf_token %}
                         <button type="submit" class="btn-agregar">Agregar al Carrito</button>
                     </form>
+                  
                 </div>
             </div>
             {% endfor %}
         </section>
         
     </main>
+    
+    <div id="notification" class="notification"></div>
 
+  
+    
     <footer>
 
         <p>&copy; 2024 Mediclimasoluciones. Todos los derechos reservados.</p>
@@ -368,6 +376,7 @@
             <a href="https://instagram.com"><img src="{% static 'imagenes/logo-instagram-1080p.png' %}" alt="Instagram" class="social-logo"></a>
         </div>
     </footer>
+    
     
     <script>
         document.getElementById('search').addEventListener('input', function() {

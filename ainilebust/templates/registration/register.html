@@ -1,5 +1,8 @@
 <!DOCTYPE html>
+{% load i18n %}
 {% load static %}
+{% load crispy_forms_tags %}
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -19,6 +22,7 @@
             background: linear-gradient(45deg, #0d0d0d, #1e1e1e);
             color: #e0e0e0;
             font-family: 'Roboto', sans-serif;
+            margin: 0;
         }
 
         .register-container {
@@ -38,17 +42,44 @@
             font-size: 1.75rem;
         }
 
-        .form-control {
-            background-color: transparent;
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            transition: 0.3s;
+            pointer-events: none;
+            color: #999;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 10px;
+            background: none;
             border: none;
             border-bottom: 2px solid #00e676;
             color: #e0e0e0;
+            outline: none;
+            font-size: 1.1rem;
         }
 
-        .form-control:focus {
-            background-color: transparent;
-            color: #e0e0e0;
-            box-shadow: none;
+        .form-group input:focus, .form-group input:valid {
+            border-bottom: 2px solid #00c853;
+        }
+
+        .form-group input:focus + label, .form-group input:valid + label {
+            top: -20px;
+            font-size: 0.75rem;
+            color: #00e676;
+        }
+
+        .form-text {
+            color: #ffffff !important;
+            font-size: 0.85rem;
         }
 
         .btn-custom {
@@ -77,12 +108,36 @@
     </style>
 </head>
 <body>
-    {% load crispy_forms_tags %}
     <div class="register-container">
         <h2>Registro de Usuario</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form|crispy }}
+            <div class="form-group">
+                <input type="email" id="id_email" name="email" required autofocus>
+                <label for="id_email">Correo electrónico</label>
+            </div>
+            <div class="form-group">
+                <input type="text" id="id_username" name="username" required>
+                <label for="id_username">Nombre de usuario</label>
+            </div>
+            <div class="form-group">
+                <input type="text" id="id_first_name" name="first_name" required>
+                <label for="id_first_name">Nombre</label>
+            </div>
+            <div class="form-group">
+                <input type="text" id="id_last_name" name="last_name" required>
+                <label for="id_last_name">Apellido</label>
+            </div>
+            <div class="form-group">
+                <input type="password" id="id_password1" name="password1" required>
+                <label for="id_password1">Contraseña</label>
+                <small class="form-text">Tu contraseña debe tener al menos 8 caracteres y no puede ser demasiado similar a tu información personal.</small>
+            </div>
+            <div class="form-group">
+                <input type="password" id="id_password2" name="password2" required>
+                <label for="id_password2">Confirmar contraseña</label>
+                <small class="form-text">Repite la misma contraseña para confirmación.</small>
+            </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-custom btn-block mt-4">Registrarse</button>
             </div>

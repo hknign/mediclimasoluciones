@@ -11,13 +11,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import CreateView
 from django.core.mail import send_mail
 from django.http import HttpResponse
-
+from twilio.rest import Client
+from .models import Producto, Servicio
+from .cart import Cart
 from datetime import date, datetime
 import calendar
 import json
-
 from babel.dates import format_date, parse_date
-
 from .forms import (
     CustomUserCreationForm,
     ReseñaForm,
@@ -27,10 +27,8 @@ from .forms import (
     ServicioForm
 )
 from .models import Reseña, Producto, Servicio, Carrito, ItemCarrito, Disponibilidad
-
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.module_loading import import_string
-
 from django.views.decorators.http import require_http_methods
 
 
@@ -57,6 +55,11 @@ def register_view(request):
     return render(request, 'registration/register.html', {'form': form})
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -65,15 +68,14 @@ def login_view(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                backend = get_user_backend(user)
-                if backend:
-                    login(request, user, backend=backend)
-                else:
-                    login(request, user)
+                login(request, user)
                 return redirect('index')
+            else:
+                messages.error(request, 'Nombre de usuario o contraseña incorrectos')
     else:
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
+
 
 @require_http_methods(["GET", "POST"])
 @login_required
@@ -126,9 +128,15 @@ def contacto(request):
         form = ContactForm()
     return render(request, 'contacto.html', {'form': form})
 
-
 def sobre_nosotros(request):
     reseñas = Reseña.objects.all().order_by('-fecha')
+    for reseña in reseñas:
+        if reseña.valoracion is None:
+            reseña.valoracion = 3  # Valor predeterminado para reseñas antiguas
+            reseña.save()
+    
+    sobre_nosotros = get_object_or_404(SobreNosotros, id=1)  
+
     if request.method == 'POST':
         form = ReseñaForm(request.POST)
         if form.is_valid():
@@ -136,7 +144,10 @@ def sobre_nosotros(request):
             return redirect('sobre_nosotros')
     else:
         form = ReseñaForm()
-    return render(request, 'sobre_nosotros.html', {'form': form, 'reseñas': reseñas})
+
+    return render(request, 'sobre_nosotros.html', {'form': form, 'reseñas': reseñas, 'sobre_nosotros': sobre_nosotros})
+
+
 
 
 
@@ -147,7 +158,6 @@ class ServicioCreateView(CreateView):
     success_url = reverse_lazy('index') 
 
 def servicios(request):
-    # Filtrar los servicios por categoría
     servicios_instalacion = Servicio.objects.filter(categoria='INSTALACION')
     servicios_mantenimiento = Servicio.objects.filter(categoria='MANTENIMIENTO')
     servicios_tecnico = Servicio.objects.filter(categoria='SOPORTE_TECNICO')
@@ -160,6 +170,18 @@ def servicios(request):
         'servicios_tecnico': servicios_tecnico,
         'todos':todos,
     })
+
+def editar_servicio(request, servicio_id):
+    servicio = get_object_or_404(Servicio, id=servicio_id)
+    if request.method == 'POST':
+        form = ServicioForm(request.POST, instance=servicio)
+        if form.is_valid():
+            form.save()
+            return redirect('servicios')
+    else:
+        form = ServicioForm(instance=servicio)
+    return render(request, 'editar_servicio.html', {'form': form, 'servicio': servicio})
+
 
 
 def agregar_servicio(request,servicio_id):
@@ -191,6 +213,7 @@ class ProductoCreateView(CreateView):
 def productos(request):
     productos = Producto.objects.all()
     return render(request, 'productos.html', {'productos': productos})
+
 
 
 def agregar_producto(request):
@@ -232,8 +255,7 @@ def eliminar_producto(request, id):
         return redirect('index')
     return redirect('index')
 
-from .models import Producto, Servicio
-from .cart import Cart
+
 
 def add_to_cart(request, product_id=None, service_id=None):
     cart = Cart(request)
@@ -260,22 +282,39 @@ def remove_from_cart(request, product_id=None, service_id=None):
 def finalizar_compra(request):
     return render(request,'finalizar_compra.html')
 
-def realizar_presupuesto(request):
-    carrito = request.session.get('carrito', {})
-    if not carrito:
-        return redirect('home')
-    total = sum(float(item['precio']) * item['cantidad'] for item in carrito.values())
-    if request.method == 'POST':
-        form = PresupuestoForm(request.POST)
-        if form.is_valid():
-            request.session['carrito'] = {}
-            return redirect('presupuesto_exitoso')
-    else:
-        form = PresupuestoForm()
-    return render(request, 'realizar_presupuesto.html', {'form': form, 'total': total, 'carrito': carrito})
 
-def presupuesto_exitoso(request):
-    return render(request, 'presupuesto_exitoso.html')
+def cambiar_estado_dia(request, fecha): 
+    disponibilidad = get_object_or_404(Disponibilidad, fecha=fecha) 
+    disponibilidad.estado = 'ocupado' 
+    disponibilidad.save() 
+    return JsonResponse({'estado': disponibilidad.estado})
+
+def enviar_presupuesto(request):
+    cart = Cart(request)
+    selected_day = request.POST.get('selected_day', 'No seleccionado')
+
+    cambiar_estado_dia(request, selected_day)
+
+    cart_items = []
+    for item_id, item_data in cart:
+        cart_items.append(f"{item_data['nombre']} (Cantidad: {item_data['quantity']}, Precio Unitario: ${item_data['price']})")
+    cart_details = "\n".join(cart_items)
+
+    message_body = f"Presupuestación realizada correctamente.\n\nDía seleccionado: {selected_day}\n\nProductos en el carrito:\n{cart_details}\n\nTotal a pagar: ${cart.get_total_price():.2f}"
+
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    message = client.messages.create(
+        body=message_body,
+        from_=settings.TWILIO_WHATSAPP_FROM,
+        to=settings.TWILIO_WHATSAPP_TO
+    )
+
+    cart.clear()
+    return redirect('pagina_de_confirmacion')
+
+def pagina_de_confirmacion(request):
+    return render(request, 'confirmacion.html')
+
 
 def get_total_price_view(request):
     cart = Cart(request)
@@ -303,7 +342,7 @@ def add_to_cart(request, item_id, item_type):
     elif item_type == 'servicio':
         item = get_object_or_404(Servicio, id=item_id)
     cart.add(item, item_type)
-    return redirect('index')  # Redirigir al index o a cualquier página que prefieras
+    return redirect('index')  
 
 def decrement_from_cart(request, item_id, item_type):
     cart = Cart(request)
@@ -312,7 +351,7 @@ def decrement_from_cart(request, item_id, item_type):
     elif item_type == 'servicio':
         item = get_object_or_404(Servicio, id=item_id)
     cart.decrement(item)
-    return redirect('view_cart')  # Redirigir a la vista del carrito
+    return redirect('index')  
 
 def remove_from_cart(request, item_id, item_type):
     cart = Cart(request)
@@ -321,34 +360,53 @@ def remove_from_cart(request, item_id, item_type):
     elif item_type == 'servicio':
         item = get_object_or_404(Servicio, id=item_id)
     cart.remove(item)
-    return redirect('view_cart')  # Redirigir a la vista del carrito
+    return redirect('index') 
 
 def view_cart(request):
     cart = Cart(request)
-    return render(request, 'cart/view_cart.html', {'cart': cart})
-
+    return render(request, 'carrito.html', {'cart': cart})
 
 
 def carrito_view(request):
     cart = Cart(request)
     cart_items = []
-    total_carrito = cart.get_total_price()  # Llama directamente el método de la clase Cart
+    total_carrito = cart.get_total_price()
 
-    for item in cart:
-        producto = item.get('item')  # Ajusta para que coincida con el key que devuelves en el iterador
-        if producto:
-            cart_items.append({
-                'id': producto.id,
-                'nombre': producto.nombre,
-                'precio': float(item['price']),
-                'cantidad': item['quantity'],
-                'imagen_url': producto.imagen.url if producto.imagen else ''
-            })
+    for item_id, item_data in cart:
+        if item_data['type'] == 'producto':
+            producto = get_object_or_404(Producto, id=item_id)
+            nombre = producto.nombre
+            imagen_url = producto.imagen.url if producto.imagen else ''
+        elif item_data['type'] == 'servicio':
+            producto = get_object_or_404(Servicio, id=item_id)
+            nombre = producto.nombre
+            imagen_url = producto.imagen.url if producto.imagen else ''
+        
+        cart_items.append({
+            'id': item_id,
+            'nombre': nombre,
+            'precio': float(item_data['price']),
+            'cantidad': item_data['quantity'],
+            'imagen_url': imagen_url,
+            'type': item_data['type']
+        })
 
     return JsonResponse({
         'carrito_items': cart_items,
         'total_carrito': float(total_carrito),
+
     })
+
+
+def get_product_total_view(request, item_id, item_type):
+    cart = Cart(request)
+    if item_type == 'producto':
+        item = get_object_or_404(Producto, id=item_id)
+    elif item_type == 'servicio':
+        item = get_object_or_404(Servicio, id=item_id)
+    total = cart.get_item_total(item_id)
+    return JsonResponse({'total': total})
+
 
 
 def dias_disponibles(request):
@@ -396,24 +454,19 @@ def calendario_admin(request):
 @csrf_exempt
 def editar_disponibilidad(request, fecha):
     try:
-        # Parsear la fecha desde el formato YYYY-MM-DD
         fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
     except ValueError as e:
         return JsonResponse({"error": f"El formato de la fecha no es válido: {str(e)}"}, status=400)
 
     if request.method == 'POST':
         try:
-            # Cargar el cuerpo de la solicitud JSON
             data = json.loads(request.body)
             nuevo_estado = data.get("nuevo_estado")
 
             if nuevo_estado not in ['disponible', 'ocupado', 'no-disponible']:
                 return JsonResponse({"error": "Estado no válido."}, status=400)
-
-            # Buscar o crear la disponibilidad correspondiente
             disponibilidad, created = Disponibilidad.objects.get_or_create(fecha=fecha_obj)
 
-            # Actualizar el estado
             disponibilidad.estado = nuevo_estado
             disponibilidad.save()
 
@@ -425,7 +478,6 @@ def editar_disponibilidad(request, fecha):
     else:
         return JsonResponse({"error": "Método no permitido."}, status=405)
 
-# Eliminar disponibilidad
 def eliminar_disponibilidad(request, fecha):
     fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
     disponibilidad = get_object_or_404(Disponibilidad, fecha=fecha_obj)
@@ -441,3 +493,42 @@ def eliminar_disponibilidad(request, fecha):
 def prueba(request):
     productos = Producto.objects.all()
     return render(request,'admin_producto.html', {'productos': productos})
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import SobreNosotros, Pregunta
+from .forms import SobreNosotrosForm, PreguntaForm
+
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def editar_sobre_nosotros(request):
+    sobre_nosotros = get_object_or_404(SobreNosotros, id=1)  # Ajusta el ID si es necesario
+    if request.method == 'POST':
+        form = SobreNosotrosForm(request.POST, instance=sobre_nosotros)
+        if form.is_valid():
+            form.save()
+            return redirect('sobre_nosotros')
+        else:
+            return JsonResponse({"status": "error", "message": "Error al guardar el texto."})
+    else:
+        form = SobreNosotrosForm(instance=sobre_nosotros)
+    return render(request, 'editar_sobre_nosotros.html', {'sobre_nosotros': sobre_nosotros, 'form': form})
+
+def preguntas_frecuentes(request):
+    if request.method == "POST":
+        form = PreguntaForm(request.POST)
+        if form.is_valid():
+            pregunta = form.save(commit=False)
+            # Asigna el autor solo si el usuario está autenticado
+            pregunta.autor = request.user if request.user.is_authenticated else None
+            pregunta.save()
+            return redirect('preguntas_frecuentes')
+    else:
+        form = PreguntaForm()
+
+    preguntas = Pregunta.objects.all()
+    return render(request, 'preguntas_frecuentes.html', {'form': form, 'preguntas': preguntas})

@@ -137,13 +137,13 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 300px; /* Ancho del carrito, ajusta según lo necesites */
-            height: 100%; /* Alto completo de la página */
+            width: 300px;
+            height: 100%;
             background-color: #fff;
             padding: 20px;
-            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda para destacarlo */
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); 
             z-index: 1000;
-            overflow-y: auto; /* Permite el desplazamiento si hay muchos productos */
+            overflow-y: auto; 
         }
 
         #carrito-popup .carrito-contenido {
@@ -162,7 +162,7 @@
         }
 
         .producto-carrito img {
-            max-width: 80px; /* Ajusta el tamaño de las imágenes */
+            max-width: 80px;
             margin-right: 20px;
         }
 
@@ -188,7 +188,7 @@
             background-color: #218838;
         }
 
-        /* Botón para mostrar el carrito (si lo necesitas en el sitio) */
+
         #mostrar-carrito-btn {
             position: fixed;
             top: 20px;
@@ -362,8 +362,6 @@
             </li>
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
             
-            <!-- Botón para abrir el carrito -->
-            <button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button>
             <li>
                 <div class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
@@ -401,7 +399,7 @@
         <div class="month">
             <div class="month-header">{{ month }}</div>
             <div class="days-grid">
-                <!-- Nombres de los días de la semana en español -->
+       
                 <div>Lun</div>
                 <div>Mar</div>
                 <div>Mié</div>
@@ -434,7 +432,7 @@
 
     <script>
         function toggleEstado(dayElement) {
-            // Alterna la visualización del estado en cada día
+
             dayElement.classList.toggle('show-estado');
         }
     </script>

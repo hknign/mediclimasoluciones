@@ -14,7 +14,11 @@ class CustomUserCreationForm(UserCreationForm):
 class ReseñaForm(forms.ModelForm):
     class Meta:
         model = Reseña
-        fields = ['nombre', 'email', 'comentario']
+        fields = ['nombre', 'email', 'comentario', 'valoracion']
+        widgets = {
+            'valoracion': forms.RadioSelect(choices=[(i, f"{i} estrellas") for i in range(1, 6)]),
+        }
+
 
 
 class ContactForm(forms.Form):
@@ -55,12 +59,10 @@ class ServicioForm(forms.ModelForm):
     class Meta:
         model = Servicio
         fields = ['nombre', 'descripcion', 'precio', 'categoria', 'imagen']
-        # Widget de la categoría se define aquí
         widgets = {
             'categoria': forms.Select(attrs={'class': 'form-control'}),
         }
-    
-    # Campos personalizados
+
     nombre = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre del servicio'}),
         max_length=255,
@@ -83,8 +85,21 @@ class ServicioForm(forms.ModelForm):
         required=True
     )
 
-    # Este campo usa las opciones predefinidas de la categoría
+
     categoria = forms.ChoiceField(
-        choices=Servicio.CATEGORIA_CHOICES,  # Asumiendo que CATEGORIAS se definió en el modelo
+        choices=Servicio.CATEGORIA_CHOICES,  
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+
+from .models import SobreNosotros, Pregunta
+
+class SobreNosotrosForm(forms.ModelForm):
+    class Meta:
+        model = SobreNosotros
+        fields = ['contenido']
+
+
+class PreguntaForm(forms.ModelForm):
+    class Meta:
+        model = Pregunta
+        fields = ['contenido']

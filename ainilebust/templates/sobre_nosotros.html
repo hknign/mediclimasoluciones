@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 {% load static %}
+{% load crispy_forms_tags %}
+{% load custom_filters %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre Nosotros</title>
     <link rel="icon" href="{% static 'imagenes/Icono-mediclimas.png' %}" type="image/x-icon">
-    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -139,13 +141,13 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 300px; /* Ancho del carrito, ajusta según lo necesites */
-            height: 100%; /* Alto completo de la página */
+            width: 300px; 
+            height: 100%; 
             background-color: #fff;
             padding: 20px;
-            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda para destacarlo */
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); 
             z-index: 1000;
-            overflow-y: auto; /* Permite el desplazamiento si hay muchos productos */
+            overflow-y: auto; 
         }
 
         #carrito-popup .carrito-contenido {
@@ -164,7 +166,7 @@
         }
 
         .producto-carrito img {
-            max-width: 80px; /* Ajusta el tamaño de las imágenes */
+            max-width: 80px;
             margin-right: 20px;
         }
 
@@ -190,7 +192,7 @@
             background-color: #218838;
         }
 
-        /* Botón para mostrar el carrito (si lo necesitas en el sitio) */
+
         #mostrar-carrito-btn {
             position: fixed;
             top: 20px;
@@ -205,6 +207,10 @@
 
         #mostrar-carrito-btn:hover {
             background-color: #218838;
+        }
+        h7{
+            margin-left: 350px;
+            color: red;
         }
         .dropdown { 
             position: relative; 
@@ -279,6 +285,21 @@
         .btn-submit:hover {
             background-color: #146356;
         }
+     
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+        .star {
+            color: gold;
+            font-size: 1.2em;
+        }
+        .review {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -290,24 +311,38 @@
     <nav>
         <ul>
 
+   
             <li><a href="{% url 'index' %}">Inicio</a></li>
             <li>
                 {% if user.is_superuser %}
-                    <a href="{% url 'prueba' %}">Gestión Productos</a>
+                <a href="{% url 'prueba' %}">Gestión Productos</a>
                 {% else %}
-                    <a href="{% url 'productos' %}">Productos</a>
+                <a href="{% url 'productos' %}">Productos</a>
                 {% endif %}
             </li>
-            <li><a href="{% url 'servicios' %}">Servicios</a></li>
-            <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
+
             <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'servicios' %}">Gestión Servicios</a>
+                {% else %}
+                    <a href="{% url 'servicios' %}">Servicios</a>
+                {% endif %}
+
+            </li>
+            <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'sobre_nosotros' %}">Gestión Blog</a>
+                {% else %}
+                    <a href="{% url 'sobre_nosotros' %}">Blog</a>
+                {% endif %}
                 
+            </li>
+            <li>
                 {% if user.is_superuser %}
                     <a href="{% url 'calendario_admin' %}">Gestión Horarios</a>
                 {% else %}
                     <a href="{% url 'calendario_usuario' %}">Horarios</a>
                 {% endif %}
-    
             </li>
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
 
@@ -340,49 +375,116 @@
         
         </ul>
     </nav>
-
-<div class="container my-5">
-    <section id="nosotros" class="row">
-        <div class="col-md-7 history">
+    <div class="container my-5">
+        <section id="nosotros" class="row align-items-start">
+            <div class="col-md-7 history">
+    
             <h2>Sobre Nosotros</h2>
-            <p>
-                En Mediclimasoluciones, nos especializamos en la venta, instalación y mantenimiento de equipos médicos de alta calidad de la marca BIOBASE. Con años de experiencia en el sector, garantizamos servicios profesionales y productos de la mejor calidad.
-            </p>
-        </div>
+            
+            <p id="contenido-parrafo">{{ sobre_nosotros.contenido }}</p>
 
-        <div class="col-md-5 review-form">
-            <h3>Envía tu Reseña</h3>
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    {{ form.nombre }}
-                </div>
-                <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    {{ form.email }}
-                </div>
-                <div class="form-group">
-                    <label for="comentario">Comentario</label>
-                    {{ form.comentario }}
-                </div>
-                <button type="submit" class="btn btn-submit btn-block">Enviar</button>
-            </form>
-        </div>
-    </section>
-
-    <section class="reviews mt-5">
-        <h3 class="text-center" style="color: #1e8678;">Reseñas de Clientes</h3>
-        {% for reseña in reseñas %}
-            <div class="review">
-                <h4>{{ reseña.nombre }} - <small>{{ reseña.fecha|date:"d M Y" }}</small></h4>
-                <p>{{ reseña.comentario }}</p>
+                
+                {% if user.is_superuser %}
+                    <a href="{% url 'editar_sobre_nosotros' %}" class="btn btn-primary mt-3">Editar</a>
+                {% endif %}
             </div>
-        {% empty %}
-            <p class="text-center">No hay reseñas aún. ¡Sé el primero en dejar una!</p>
-        {% endfor %}
-    </section>
-</div>
+
+            {% if user.is_superuser %}
+
+            {%else%}
+                <div class="col-md-5 review-form">
+                    <h3>Envía tu Reseña</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-submit btn-block mt-3">Enviar</button>
+                    </form>
+                </div>
+
+            {% endif %}
+     
+        </section>
+        <section class="reviews mt-5">
+            <h3 class="text-center" style="color: #1e8678;">Reseñas de Clientes</h3>
+            {% for reseña in reseñas %}
+                <div class="review d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                        <h4>{{ reseña.nombre }} - <small>{{ reseña.fecha|date:"d M Y" }}</small></h4>
+                        <p>{{ reseña.comentario }}</p>
+                    </div>
+                    <div class="stars">
+                        <!-- Estrellas llenas -->
+                        {% for i in reseña.valoracion|range_filter %}
+                            <span class="star">&#9733;</span> {# Estrella llena #}
+                        {% endfor %}
+                        <!-- Estrellas vacías -->
+                        {% for i in reseña.valoracion|range_filter:5 %}
+                            <span class="star">&#9734;</span> {# Estrella vacía #}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center">No hay reseñas aún. ¡Sé el primero en dejar una!</p>
+            {% endfor %}
+        </section>
+        
+        
+        
+        {% if user.is_superuser %}
+        
+        {% else %}
+        <section class="faq mt-5">
+            <h3 class="text-center" style="color: #1e8678;">Preguntas Frecuentes</h3>
+            <h7>¿Tienes alguna pregunta?, dejala en el apartado siguiente</h7>
+            <div class="col-md-6 mx-auto review-form mt-4">
+                
+                <form method="post" action="{% url 'preguntas_frecuentes' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-submit btn-block mt-3">Ir a dejar una pregunta</button>
+                </form>
+            </div>
+        </section>
+        {% endif %}
+    </div>
+    
+    <!-- Chatbot -->
+    <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px;">
+        <button id="chatbot-btn" class="btn btn-primary">Servicio al Cliente</button>
+        <div id="chatbot-box" style="display: none; background-color: #f9f9f9; border: 1px solid #ddd; padding: 10px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.2); max-width: 300px;">
+            <h5 style="color: #1e8678;">Chat Virtual</h5>
+            <div id="chatbot-messages" style="height: 200px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #ddd; padding: 5px; background-color: #fff;">
+                <p>Hola, ¿en qué puedo ayudarte?</p>
+            </div>
+            <input type="text" id="chatbot-input" class="form-control" placeholder="Escribe tu mensaje..." />
+            <button id="chatbot-send" class="btn btn-submit btn-block mt-2">Enviar</button>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('chatbot-btn').addEventListener('click', function() {
+            const chatbotBox = document.getElementById('chatbot-box');
+            chatbotBox.style.display = chatbotBox.style.display === 'none' ? 'block' : 'none';
+        });
+    
+        document.getElementById('chatbot-send').addEventListener('click', function() {
+            const input = document.getElementById('chatbot-input').value;
+            const messages = document.getElementById('chatbot-messages');
+            const userMessage = document.createElement('p');
+            userMessage.textContent = `Tú: ${input}`;
+            messages.appendChild(userMessage);
+    
+            // Simulación de respuesta automática
+            setTimeout(() => {
+                const botMessage = document.createElement('p');
+                botMessage.textContent = 'Bot: Gracias por tu mensaje. Estamos procesando tu consulta.';
+                messages.appendChild(botMessage);
+            }, 1000);
+    
+            document.getElementById('chatbot-input').value = '';
+            messages.scrollTop = messages.scrollHeight;
+        });
+    </script>
+    
 <footer>
 
     <p>&copy; 2024 Mediclimasoluciones. Todos los derechos reservados.</p>
@@ -392,7 +494,7 @@
         <a href="https://instagram.com"><img src="{% static 'imagenes/logo-instagram-1080p.png' %}" alt="Instagram" class="social-logo"></a>
     </div>
 </footer>
-<!-- Bootstrap JS and dependencies -->
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

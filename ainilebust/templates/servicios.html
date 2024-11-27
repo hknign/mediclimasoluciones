@@ -95,13 +95,13 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 300px; /* Ancho del carrito, ajusta según lo necesites */
-            height: 100%; /* Alto completo de la página */
+            width: 300px; 
+            height: 100%; 
             background-color: #fff;
             padding: 20px;
-            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda para destacarlo */
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-            overflow-y: auto; /* Permite el desplazamiento si hay muchos productos */
+            overflow-y: auto;
         }
 
         #carrito-popup .carrito-contenido {
@@ -120,7 +120,7 @@
         }
 
         .producto-carrito img {
-            max-width: 80px; /* Ajusta el tamaño de las imágenes */
+            max-width: 80px;
             margin-right: 20px;
         }
 
@@ -146,7 +146,7 @@
             background-color: #218838;
         }
 
-        /* Botón para mostrar el carrito (si lo necesitas en el sitio) */
+       
         #mostrar-carrito-btn {
             position: fixed;
             top: 20px;
@@ -281,12 +281,13 @@
     <nav>
         <ul>
 
+
             <li><a href="{% url 'index' %}">Inicio</a></li>
             <li>
                 {% if user.is_superuser %}
-                    <a href="{% url 'prueba' %}">Gestión Productos</a>
+                <a href="{% url 'prueba' %}">Gestión Productos</a>
                 {% else %}
-                    <a href="{% url 'productos' %}">Productos</a>
+                <a href="{% url 'productos' %}">Productos</a>
                 {% endif %}
             </li>
 
@@ -298,20 +299,23 @@
                 {% endif %}
 
             </li>
-            <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
             <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'sobre_nosotros' %}">Gestión Blog</a>
+                {% else %}
+                    <a href="{% url 'sobre_nosotros' %}">Blog</a>
+                {% endif %}
                 
+            </li>
+            <li>
                 {% if user.is_superuser %}
                     <a href="{% url 'calendario_admin' %}">Gestión Horarios</a>
                 {% else %}
                     <a href="{% url 'calendario_usuario' %}">Horarios</a>
                 {% endif %}
-    
             </li>
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
             
-            <!-- Botón para abrir el carrito -->
-            <button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button>
             <li>
                 <div class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
@@ -421,7 +425,7 @@
             <h3 class="titulo-servicios mb-1">Lista de servicios</h3>
             <p class="section-description">En la siguiente lista puede encontrar todos los servicios que ofrecemos.</p>
             {% if user.is_superuser %}
-            <!-- Botón que abre el modal -->
+
             <a class="btn btn-primary btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#agregarServicioModal">
                 Agregar Servicio
             </a>
@@ -446,9 +450,9 @@
                     <td>{{ servicio.categoria }}</td>
                     <td>
                         {% if user.is_superuser %}
-                            <!-- Código para superuser -->
+  
                         {% else %}
-                            <form action="{% url 'agregar_servicio_al_carrito' servicio.id %}" method="post">
+                            <form action="{% url 'add_to_cart' servicio.id 'servicio' %}" method="post">
                                 {% csrf_token %}
                 
                                 <button id="btn-agregar" class="btn btn-primary btn-sm btn-agregar" type="submit" data-servicio-id="{{ servicio.id }}" data-servicio-nombre="{{ servicio.nombre }}" data-servicio-precio="{{ servicio.precio }}">
@@ -460,7 +464,7 @@
                     
                     {% if user.is_superuser %}
                     <td>
-                        <a class="btn btn-primary btn-sm" href="#">Editar Servicio</a>
+                        <a class="btn btn-primary btn-sm" href="{% url 'editar_servicio' servicio.id %}">Editar Servicio</a>
                     </td>
                     <td>
                         <form action="{% url 'eliminar_servicio' servicio.id %}" method="post" class="btn-eliminar-form" onsubmit="return confirmarEliminacion();">
@@ -487,7 +491,7 @@
         
     
     </section>
-    <!-- Modal -->
+
     <div class="modal fade" id="agregarServicioModal" tabindex="-1" aria-labelledby="agregarServicioModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -496,7 +500,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Formulario de Agregar Servicio -->
+            
                     <form method="POST" action="{% url 'agregar_servicio' %}" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mb-3">
@@ -530,7 +534,15 @@
             </div>
         </div>
     </div>
+    <footer>
 
+        <p>&copy; 2024 Mediclimasoluciones. Todos los derechos reservados.</p>
+        <div>
+            <a href="https://facebook.com"><img src="{% static 'imagenes/facebook.png' %}" alt="Facebook" class="social-logo"></a>
+            <a href="https://whatsapp.com"><img src="{% static 'imagenes/WhatsApp.png' %}" alt="WhatsApp" class="social-logo"></a>
+            <a href="https://instagram.com"><img src="{% static 'imagenes/logo-instagram-1080p.png' %}" alt="Instagram" class="social-logo"></a>
+        </div>
+    </footer>
     
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
@@ -563,12 +575,12 @@
             const servicioNombre = this.getAttribute('data-servicio-nombre');
             const servicioPrecio = this.getAttribute('data-servicio-precio');
 
-            // Enviar el servicio al backend para agregarlo al carrito
+        
             fetch('/agregar_servicio/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'  // Agregar el token CSRF
+                    'X-CSRFToken': '{{ csrf_token }}'  
                 },
                 body: JSON.stringify({
                     servicio_id: servicioId,
@@ -578,7 +590,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                alert(data.message);  // Mostrar un mensaje si el servicio se agrega correctamente
+                alert(data.message);  
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -601,117 +613,6 @@
             }
             return cookieValue;
         }
-
-        // Mostrar el carrito (popup)
-        function mostrarCarrito() {
-            cargarCarrito(); // Cargar los datos del carrito
-            const carrito = document.getElementById('carrito-popup');
-            carrito.style.display = 'block'; // Mostrar el carrito
-        }
-
-        // Cerrar el carrito (popup)
-        function cerrarCarrito() {
-            const carrito = document.getElementById('carrito-popup');
-            carrito.style.display = 'none'; // Ocultar el carrito
-        }
-
-        // Cargar los productos del carrito desde el backend
-        function cargarCarrito() {
-            fetch('/carrito/')
-                .then(response => response.json())
-                .then(data => {
-                    const carritoContenido = document.getElementById('contenido-carrito');
-                    const totalCarrito = document.getElementById('total-carrito');
-                    carritoContenido.innerHTML = ''; // Limpia el contenido actual
-                    let total = 0;
-
-                    if (data.carrito_items && data.carrito_items.length > 0) {
-                        data.carrito_items.forEach(item => {
-                            const productoDiv = document.createElement('div');
-                            productoDiv.classList.add('producto-carrito');
-                            productoDiv.innerHTML = `
-                                <img src="${item.imagen_url || 'placeholder.jpg'}" alt="${item.nombre}" style="max-width: 80px;">
-                                <div>
-                                    <h3>${item.nombre}</h3>
-                                    <p>Precio: $${item.precio}</p>
-                                    <p>Cantidad: ${item.cantidad}</p>
-                                </div>
-                                <button class="btn btn-danger" onclick="eliminarProducto(${item.id})">Eliminar</button>
-                            `;
-                            carritoContenido.appendChild(productoDiv);
-                            total += item.precio * item.cantidad; // Calcula el total
-                        });
-                    } else {
-                        carritoContenido.innerHTML = '<p>El carrito está vacío.</p>';
-                    }
-                    totalCarrito.textContent = `$${total.toFixed(2)}`; // Actualiza el total
-                })
-                .catch(error => console.error('Error al cargar el carrito:', error));
-        }
-
-        // Agregar un producto al carrito
-        function agregarAlCarrito(productoId) {
-            fetch(`/agregar_producto/${productoId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then(response => {
-                    if (response.ok) {
-                        cargarCarrito(); // Recarga el carrito automáticamente
-                    } else {
-                        console.error('Error al agregar el producto');
-                    }
-                })
-                .catch(error => console.error('Error al agregar al carrito:', error));
-        }
-
-        // Eliminar un producto del carrito
-        function eliminarProducto(productoId) {
-            fetch(`/eliminar-producto/${productoId}/`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then(response => {
-                    if (response.ok) {
-                        cargarCarrito(); // Recarga el carrito automáticamente
-                    } else {
-                        console.error('Error al eliminar el producto');
-                    }
-                })
-                .catch(error => console.error('Error al eliminar del carrito:', error));
-        }
-
-        // Finalizar la compra
-        function finalizarCompra() {
-            alert('¡Gracias por tu compra!');
-            fetch('/ruta-de-finalizar-compra/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                },
-            })
-                .then(response => {
-                    if (response.ok) {
-                        cerrarCarrito();
-                        cargarCarrito(); // Limpia el carrito tras la compra
-                    } else {
-                        console.error('Error al finalizar la compra');
-                    }
-                })
-                .catch(error => console.error('Error al finalizar la compra:', error));
-        }
-
-        // Mostrar el carrito al hacer clic en el botón
-        document.getElementById('carritoBtn').addEventListener('click', mostrarCarrito);
-
-        // Cerrar el carrito al hacer clic en el botón
-        document.getElementById('cerrarPopup').addEventListener('click', cerrarCarrito);
 
     </script>
 </body>

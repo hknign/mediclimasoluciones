@@ -11,7 +11,12 @@ class Cart:
     def add(self, item, item_type):
         item_id = str(item.id)
         if item_id not in self.cart:
-            self.cart[item_id] = {'quantity': 1, 'price': str(item.precio), 'type': item_type}
+            self.cart[item_id] = {
+                'quantity': 1,
+                'price': str(item.precio),
+                'type': item_type,
+                'nombre': item.nombre  # Añadir el nombre del producto o servicio
+            }
         else:
             self.cart[item_id]['quantity'] += 1
         self.save()
@@ -40,3 +45,10 @@ class Cart:
     def clear(self):
         del self.session['cart']
         self.save()
+
+    def get_total_price(self):
+        return sum(float(item['price']) * item['quantity'] for item in self.cart.values())
+
+    def get_item_total(self, item_id):
+        item = self.cart[item_id]
+        return float(item['price']) * item['quantity']

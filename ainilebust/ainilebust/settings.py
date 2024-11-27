@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
     'appWeb',
+    
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -143,3 +144,10 @@ STATICFILES_DIRS= [os.path.join(BASE_DIR,'static')]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+TWILIO_ACCOUNT_SID = 'AC900f743db39b4bec31fb4cf8bac67d37'
+TWILIO_AUTH_TOKEN = 'a4610196cac731e133ab542b1aeb44ac'
+TWILIO_WHATSAPP_FROM = 'whatsapp:+14155238886'  # Este es el número sandbox de WhatsApp de Twilio
+TWILIO_WHATSAPP_TO = 'whatsapp:+56977008099' 

@@ -2,6 +2,7 @@
 {% load static %}
 {% load extra_filters %}
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,37 +15,103 @@
     <script src="{% static 'js/script.js' %}" defer></script>
 
     <style>
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
         }
 
-        header {
-            background-color: #004d40;
-            
-            color: white;
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1; 
+            padding: 20px;
+            background-color: #ffffff; 
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color:  #00695c;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 50px;
+            height: auto;
+            margin-right: 15px;
+        }
+
+        .company-name {
+            font-size: 24px;
+            color: #ffffff; 
+            font-weight: bold;
+        }
+
+        .account-container {
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        #account-name {
+            background-color: #3CB371; 
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: solid;
+        }
+
+        main {
+            padding: 20px;
+            background-color: #ffffff; 
+        }
+
+        .footer {
+            background-color: #2E8B57; 
+            color: #ffffff;
+            padding: 20px 0;
             text-align: center;
         }
 
-        header img {
-            width: 150px;
+        .footer p {
+            margin: 0;
         }
-
         nav ul {
             list-style-type: none;
             margin: 0;
             padding: 0;
+            
             text-align: center;
             background-color: #00695c;
         }
 
         nav ul li {
             display: inline;
+            
         }
 
         nav ul li a {
-            text-decoration: none;
+            text-decoration:solid;
             color: white;
             padding: 10px 20px;
             display: inline-block;
@@ -52,8 +119,10 @@
         }
 
         nav ul li a:hover {
+            text-decoration:solid;
             background-color: #004d40;
         }
+
         .hero-section {
             background-size: cover;
             background-position: center;
@@ -122,17 +191,20 @@
         footer .social-logo:hover {
             transform: scale(1.2);
         }
-        h6{
+
+        h6 {
             margin-bottom: 300px;
         }
-        .slogan{
-            margin-bottom: 100px;
+        
 
+        .slogan {
+            margin-bottom: 100px;
         }
+
         .logo {
-            width: 75px; 
-            height: 75px; 
-            border-radius: 50%; 
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
             object-fit: cover;
             display: block;
             margin: 0 auto;
@@ -152,34 +224,35 @@
             background-color: #218838;
         }
 
-     
-        .dropdown { 
-            position: relative; 
-            display: inline-block; 
-        } 
-        .dropdown-options { 
-            display: none; 
-            position: absolute; 
-            background-color: white; 
-            min-width: 160px; 
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
-            z-index: 1; 
-        } 
-        .dropdown-options a { 
-            color: black; 
-            padding: 12px 16px; 
-            text-decoration: none; display: block; 
-        } 
-        .dropdown-options a:hover {
-            background-color: #f1f1f1;
-        } 
-        .dropdown:hover .dropdown-options { 
-            display: block; 
+        .dropdown {
+            position: relative;
+            display: inline-block;
         }
 
-<<<<<<< HEAD
+        .dropdown-options {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
 
-        /* Estilo para centrar el popup */
+        .dropdown-options a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-options a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-options {
+            display: block;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -216,9 +289,11 @@
         .modal-footer {
             justify-content: space-between;
         }
+
         .btn {
             margin-right: 5px;
         }
+
         .close {
             color: #aaa;
             float: right;
@@ -248,29 +323,27 @@
             font-size: 20px;
             font-weight: bold;
         }
-        /* Contenedor de las tarjetas */
+
         .d-flex.flex-wrap {
-            gap: 10px; /* Espacio entre tarjetas */
+            gap: 10px;
             justify-content: center;
             align-items: center;
         }
 
-        /* Tarjetas generales */
         .card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animación suave */
-            border: 2px solid #ddd; /* Borde inicial */
-            border-radius: 8px; /* Bordes redondeados */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .card:hover {
-            transform: translateY(-5px); /* Elevación al pasar el mouse */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
-            border-color: #28a745; /* Borde verde al hover */
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-color: #28a745;
             cursor: pointer;
         }
 
-        /* Texto de las tarjetas */
         .card .card-title {
             font-size: 16px;
             font-weight: bold;
@@ -279,16 +352,28 @@
 
         .card .card-text {
             font-size: 14px;
-            color: #28a745; /* Color verde para disponibles */
+            color: #28a745;
         }
 
-        /* Tarjeta seleccionada */
         .card.seleccionada {
-            border-color: #007bff !important; /* Borde azul */
-            background-color: #e9f7fe; /* Fondo azul claro */
-            color: #004085; /* Texto azul oscuro */
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Sombra azul */
+            border-color: #007bff !important;
+            background-color: #e9f7fe;
+            color: #004085;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
         }
+        .dropbtn {
+            background-color: #3CB371; 
+            padding: 10px 15px;
+            border-radius: 20px;
+            color: #ffffff; 
+            text-decoration: none;
+            
+        }
+
+        .dropbtn:hover {
+            background-color: #2E8B57; 
+        }
+
         .popup-container {
             display: none;
             position: fixed;
@@ -296,57 +381,59 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
         }
 
         .popup {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            max-height: 80%;
-            overflow-y: auto;
-            position: relative;
-            width: 80%;
-            max-width: 600px;
-        }
-
-        .close-btn {
-            font-size: 24px;
-            cursor: pointer;
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .popup-content {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
         }
 
         .day {
+            margin-bottom: 10px;
             padding: 10px;
             border: 1px solid #ddd;
-            margin: 5px 0;
+            border-radius: 4px;
             cursor: pointer;
             background-color: #f9f9f9;
-            border-radius: 5px;
-            text-align: center;
         }
 
-        .day:hover {
-            background-color: #e0e0e0;
+        .day.disponible:hover {
+            background-color: #e6f7ff;
         }
 
-        .disponible {
-            background-color: #c8e6c9; /* Color de fondo para los días disponibles */
+        .estado {
+            font-size: 12px;
+            color: #888;
         }
 
-=======
+        #dia-seleccionado {
+            font-weight: bold;
+            color: #007bff;
+        }
+
         .carousel-caption {
             position: absolute;
             margin-top: 0;
@@ -357,22 +444,52 @@
             text-align: center;
         }
 
->>>>>>> e5d7e46a1bf1c1fc324a8e6730ac9771574aac80
+
+      
     </style>
 </head>
+
 <body>
-    <header>
-        <img src="{% static 'imagenes/logo.png' %}" alt="Logo Mediclimasoluciones" class="logo">
+
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="{% static 'imagenes/logo.png' %}" alt="Logo Mediclimasoluciones" class="logo">
+                <span class="company-name">Mediclimasoluciones</span>
+            </div>
+            <div class="account-container">
+                <ul>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn" id="account-name">@{{ user.username }}</a>
+                        <div class="dropdown-options">
+                            {% if user.is_superuser %}
+                            <a href="{% url 'admin_dashboard' %}">Perfil</a>
+                            {% else %}
+                            <a href="{% url 'user_dashboard' %}">Perfil</a>
+                            {% endif %}
+                            <a href="#">Ajustes</a>
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'logout' %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit">Cerrar sesión</button>
+                            </form>
+                            {% else %}
+                            <a href="{% url 'Login' %}">Iniciar Sesión</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </header>
-    
     <nav>
         <ul>
             <li><a href="{% url 'index' %}">Inicio</a></li>
             <li>
                 {% if user.is_superuser %}
-                    <a href="{% url 'prueba' %}">Gestión Productos</a>
+                <a href="{% url 'prueba' %}">Gestión Productos</a>
                 {% else %}
-                    <a href="{% url 'productos' %}">Productos</a>
+                <a href="{% url 'productos' %}">Productos</a>
                 {% endif %}
             </li>
 
@@ -384,7 +501,14 @@
                 {% endif %}
 
             </li>
-            <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
+            <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'sobre_nosotros' %}">Gestión Blog</a>
+                {% else %}
+                    <a href="{% url 'sobre_nosotros' %}">Blog</a>
+                {% endif %}
+                
+            </li>
             <li>
                 {% if user.is_superuser %}
                     <a href="{% url 'calendario_admin' %}">Gestión Horarios</a>
@@ -393,29 +517,19 @@
                 {% endif %}
             </li>
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
-            <!-- Botón para abrir el carrito -->
-            <li><button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button></li>
-            <li class="dropdown">
-                <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
-                <div class="dropdown-options">
-                    {% if user.is_superuser %}
-                        <a href="{% url 'admin_dashboard' %}">Perfil</a>
-                    {% else %}
-                        <a href="{% url 'user_dashboard' %}">Perfil</a>
-                    {% endif %}
-                    <a href="#">Ajustes</a>
-                    {% if user.is_authenticated %}
-                        <form action="{% url 'logout' %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit">Cerrar sesión</button>
-                        </form>
-                    {% else %}
-                        <a href="{% url 'Login' %}">Iniciar Sesión</a>
-                    {% endif %}
-                </div>
+            
+            
+            <li>
+                {% if user.is_superuser %}
+
+                {% else %}
+                <button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button>
+                {% endif %}
+                
             </li>
+           
         </ul>
-    </nav> 
+    </nav>
 
 
     <div id="carrito-popup" class="modal" tabindex="-1" role="dialog">
@@ -423,7 +537,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Tu Carrito</h5>
-                    <button type="button" class="close" id="cerrar-carrito" aria-label="Close">
+                    <button type="button" class="close" id="cerrar" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -434,158 +548,175 @@
                                 <th>Producto/Servicio</th>
                                 <th>Cantidad</th>
                                 <th>Precio Unitario</th>
-                                <th>Precio Total</th>
-                                <th>Acciones</th>
+                                <th>Disminuir</th>
+                                <th>Eliminar</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% if cart %}
-                                {% for item_id, item_data in cart %}
-                                <tr>
-                                    <td>{{ item_data.type }} - ID {{ item_id }}</td>
-                                    <td>
-                                        <form action="{% url 'add_to_cart' item_id item_data.type %}" method="post">
-                                            {% csrf_token %}
-                                            <input type="number" name="quantity" value="{{ item_data.quantity }}" min="1" class="form-control form-control-sm mx-auto" style="width: 70px;">
-                                            <button type="submit" class="btn btn-success btn-sm mt-1">Actualizar</button>
-                                        </form>
-                                    </td>
-                                    <td>${{ item_data.price }}</td>
-                                    <td>${{ item_data.quantity|floatformat:2 }}</td>
-                                    <td>
-                                        <a href="{% url 'decrement_from_cart' item_id item_data.type %}" class="btn btn-info btn-sm" title="Disminuir">
-                                            <i class="bi bi-dash-circle"></i>
-                                        </a>
-                                        <a href="{% url 'remove_from_cart' item_id item_data.type %}" class="btn btn-danger btn-sm" title="Eliminar">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                                <tr>
-                                    <td colspan="3" class="text-right font-weight-bold">Total:</td>
-                                    <td colspan="2">${{ cart.get_total_price|floatformat:2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5">
-                                        <button id="seleccionar-dia-btn" class="btn btn-primary">Seleccionar Día</button>
-                                        <!-- Contenedor del popup -->
-                                        <div id="popup-container" class="popup-container">
-                                            <div class="popup">
-                                                <span class="close-btn" id="close-popup">&times;</span>
-                                                <div class="popup-content" id="popup-content">
-                                                    <!-- Aquí se cargarán los días disponibles -->
-                                                </div>
+                            {% for item_id, item_data in cart %}
+                            <tr>
+                                <td>{{ item_data.nombre }} </td>
+                                <td>
+                                    <form action="{% url 'add_to_cart' item_id item_data.type %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item_data.quantity }}" min="1"
+                                            class="form-control form-control-sm mx-auto" style="width: 70px;">
+                                        <button type="submit" class="btn btn-success btn-sm" title="Agregar"> <i
+                                                class="bi bi-plus-circle"></i> </button>
+                                    </form>
+                                </td>
+                                <td>${{ item_data.price }}</td>
+                                <td>
+                                    <a href="{% url 'decrement_from_cart' item_id item_data.type %}"
+                                        class="btn btn-info btn-sm" title="Disminuir">
+                                        <i class="bi bi-dash-circle"></i>
+                                    </a>
+                                </td>
+                                <td>
+
+                                    <a href="{% url 'remove_from_cart' item_id item_data.type %}"
+                                        class="btn btn-danger btn-sm" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="3" class="text-right font-weight-bold">Total:</td>
+                                <td colspan="2">${{ cart.get_total_price|floatformat:2 }}</td>
+                            </tr>
+
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">El carrito está vacío.</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td colspan="5">
+                                    <button id="seleccionar-dia-btn" class="btn btn-primary">Seleccionar Día</button>
+                                    <p id="dia-seleccionado" class="mt-2"></p>
+                                
+                                    <div id="popup-container" class="popup-container">
+                                        <div class="popup">
+                                            <span class="close-btn" id="close-popup">&times;</span>
+                                            <div class="popup-content" id="popup-content">
+                                          
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="5" class="text-center">El carrito está vacío.</td>
-                                </tr>
-                            {% endif %}
+                                    </div>
+                                </td>
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                        document.getElementById('seleccionar-dia-btn').onclick = function() {
+                                            document.getElementById('popup-container').style.display = 'block';
+                              
+                                            cargarDiasDisponibles();
+                                        };
+                                    
+                                        document.getElementById('close-popup').onclick = function() {
+                                            document.getElementById('popup-container').style.display = 'none';
+                                        };
+                                    
+                                        function cargarDiasDisponibles() {
+                                    
+                                            fetch("{% url 'dias_disponibles' %}")
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    const popupContent = document.getElementById('popup-content');
+                                                    popupContent.innerHTML = '';
+                                                    data.forEach(dia => {
+                                                        const diaDiv = document.createElement('div');
+                                                        diaDiv.className = 'day disponible';
+                                                        diaDiv.innerHTML = `
+                                                            <span>${dia.fecha}</span>
+                                                            <div class="estado">${dia.estado}</div>
+                                                        `;
+                                                        diaDiv.onclick = function() {
+                                                          
+                                                            seleccionarDia(dia.fecha);
+                                                        };
+                                                        popupContent.appendChild(diaDiv);
+                                                    });
+                                                })
+                                                .catch(error => console.error('Error al cargar los días disponibles:', error));
+                                        }
+                                    
+                                        function seleccionarDia(fecha) {
+                                            document.getElementById('popup-container').style.display = 'none';
+                                            console.log('Día seleccionado:', fecha);
+                            
+                                            document.getElementById('dia-seleccionado').textContent = `Día seleccionado: ${fecha}`;
+                                            document.getElementById('selected_day').value = fecha;  
+                                        }
+                                    });
+                                </script>
+                                    
+                                    
+                                
+                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button id="realizar-presupuesto" class="btn btn-primary">Realizar Presupuestación</button>
+                    <td colspan="5"> 
+                        <form action="{% url 'enviar_presupuesto' %}" method="post"> 
+                            {% csrf_token %} 
+                            <input type="hidden" name="selected_day" id="selected_day"> 
+                            <button type="submit" id="realizar-presupuesto" class="btn btn-primary">Realizar Presupuestación</button> 
+                        </form> 
+                    </td>
                     <button type="button" class="btn btn-secondary" id="cerrar-carrito-footer">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
 
+
     <script>
         function mostrarCarrito() {
-            $('#carrito-popup').modal('show'); // Mostrar el modal del carrito
+            $('#carrito-popup').modal('show'); 
         }
-        
-        $(document).ready(function(){
-            // Cerrar el carrito al presionar los botones de cierre
-            $('#cerrar-carrito, #cerrar-carrito-footer').click(function() {
+
+        $(document).ready(function () {
+            
+            $('#cerrar-carrito, #cerrar-carrito-footer').click(function () {
                 $('#carrito-popup').modal('hide');
             });
         });
-      
-        document.getElementById('seleccionar-dia-btn').onclick = function() {
-            document.getElementById('popup-container').style.display = 'block';
-            // Aquí cargarás los días disponibles usando AJAX
-            cargarDiasDisponibles();
-        };
-    
-        document.getElementById('close-popup').onclick = function() {
-            document.getElementById('popup-container').style.display = 'none';
-        };
-    
-        function cargarDiasDisponibles() {
-            // Realiza una petición AJAX para obtener los días disponibles
-            fetch("{% url 'dias_disponibles' %}")
-                .then(response => response.json())
-                .then(data => {
-                    const popupContent = document.getElementById('popup-content');
-                    popupContent.innerHTML = ''; // Limpiar el contenido previo
-                    data.forEach(dia => {
-                        const diaDiv = document.createElement('div');
-                        diaDiv.className = 'day disponible';
-                        diaDiv.innerHTML = `
-                            <span>${dia.fecha}</span>
-                            <div class="estado">${dia.estado}</div>
-                        `;
-                        diaDiv.onclick = function() {
-                            // Aquí puedes manejar el evento cuando se selecciona un día
-                            seleccionarDia(dia.fecha);
-                        };
-                        popupContent.appendChild(diaDiv);
-                    });
-                });
-        }
-    
-        function seleccionarDia(fecha) {
-            // Aquí pu    function seleccionarDia(fecha) {
-        // Aquí puedes manejar la selección del día y cerrar el popup
-        document.getElementById('popup-container').style.display = 'none';
-        console.log('Día seleccionado:', fecha);
-        // Redirigir o actualizar la página según sea necesario
-        }
-  
+
+
 
     
-
-        // Función para abrir el carrito
-        document.getElementById("btn-carrito").onclick = function() {
+        document.getElementById("btn-carrito").onclick = function () {
             document.getElementById("carrito-popup").style.display = "block";
         };
 
-        // Función para cerrar el carrito
-        document.getElementById("cerrar-carrito").onclick = function() {
+      
+        document.getElementById("cerrar-carrito").onclick = function () {
             document.getElementById("carrito-popup").style.display = "none";
         };
 
-        // Cerrar el carrito cuando se haga clic fuera del contenido
-        window.onclick = function(event) {
+  
+        window.onclick = function (event) {
             if (event.target === document.getElementById("carrito-popup")) {
                 document.getElementById("carrito-popup").style.display = "none";
             }
         };
         function actualizarTotal() {
-        fetch("{% url 'get_total_price_view' %}")  // Ajusta la URL según tu configuración
-            .then(response => response.json())
-            .then(data => {
-                const totalElement = document.getElementById('total_carrito');
-                totalElement.textContent = `$${data.total_carrito.toFixed(2)}`;
-            })
-            .catch(error => console.error('Error al actualizar el total:', error));
-    }
+            fetch("{% url 'get_total_price_view' %}")  
+                .then(response => response.json())
+                .then(data => {
+                    const totalElement = document.getElementById('total_carrito');
+                    totalElement.textContent = `$${data.total_carrito.toFixed(2)}`;
+                })
+                .catch(error => console.error('Error al actualizar el total:', error));
+        }
 
-        // Ejemplo: Llama a esta función después de cualquier acción en el carrito
-        document.addEventListener('DOMContentLoaded', function() {
-            actualizarTotal(); // Actualiza al cargar
-        });
     </script>
 
 
-   <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
 
 
     <div class="hero-section">
@@ -595,6 +726,7 @@
                     <img src="{% static '/imagenes/fondo.png' %}" class="d-block w-100" alt="First slide">
                     <div class="carousel-caption d-none d-md-block">
                         <h5>Equipos Médicos BIOBASE</h5>
+                        <br><br><br><br><br><br><br><br><br><br><br>
                         <p>Venta, instalación y servicio técnico autorizado</p>
                         <a href="{% url 'productos' %}" class="btn btn-primary btn-lg">Nuestros Productos</a>
                     </div>
@@ -603,6 +735,7 @@
                     <img src="{% static '/imagenes/fondo.png' %}" class="d-block w-100" alt="Second slide">
                     <div class="carousel-caption d-none d-md-block">
                         <h5>Equipos Médicos BIOBASE</h5>
+                        <br><br><br><br><br><br><br><br><br><br><br>
                         <p>Venta, instalación y servicio técnico autorizado</p>
                         <a href="{% url 'servicios' %}" class="btn btn-primary btn-lg">Nuestros Servicios</a>
                     </div>
@@ -617,25 +750,24 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-<<<<<<< HEAD
-    </section>
-=======
     </div>
-    
 
->>>>>>> e5d7e46a1bf1c1fc324a8e6730ac9771574aac80
+
     <footer>
 
         <p>&copy; 2024 Mediclimasoluciones. Todos los derechos reservados.</p>
         <div>
-            <a href="https://www.facebook.com/profile.php?id=61563154568439"><img src="{% static 'imagenes/facebook.png' %}" alt="Facebook" class="social-logo"></a>
-            <a href="https://wa.me/56951409216"><img src="{% static 'imagenes/WhatsApp.png' %}" alt="WhatsApp" class="social-logo"></a>
-            <a href="https://instagram.com"><img src="{% static 'imagenes/logo-instagram-1080p.png' %}" alt="Instagram" class="social-logo"></a>
+            <a href="https://www.facebook.com/profile.php?id=61563154568439"><img
+                    src="{% static 'imagenes/facebook.png' %}" alt="Facebook" class="social-logo"></a>
+            <a href="https://wa.me/56951409216"><img src="{% static 'imagenes/WhatsApp.png' %}" alt="WhatsApp"
+                    class="social-logo"></a>
+            <a href="https://instagram.com"><img src="{% static 'imagenes/logo-instagram-1080p.png' %}" alt="Instagram"
+                    class="social-logo"></a>
         </div>
     </footer>
-    
 
-    
+
+
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -655,32 +787,13 @@
             return cookieValue;
         }
 
-  
-        // Finalizar la compra
-        function finalizarCompra() {
-            alert('¡Gracias por tu compra!');
-            fetch('/ruta-de-finalizar-compra/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                },
-            })
-                .then(response => {
-                    if (response.ok) {
-                        cerrarCarrito();
-                        cargarCarrito(); // Limpia el carrito tras la compra
-                    } else {
-                        console.error('Error al finalizar la compra');
-                    }
-                })
-                .catch(error => console.error('Error al finalizar la compra:', error));
-        }
 
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
 </body>
+
 </html>

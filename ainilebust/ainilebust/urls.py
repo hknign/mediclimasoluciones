@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from appWeb.views import  register_view, login_view,index_view, productos,servicios,sobre_nosotros,contacto
-from appWeb.views import realizar_presupuesto,presupuesto_exitoso, agregar_producto, editar_producto
+from appWeb.views import agregar_producto, editar_producto,enviar_presupuesto,pagina_de_confirmacion
 from django.contrib.auth.views import LogoutView
 from appWeb.views import prueba, ProductoCreateView, eliminar_producto, admin_dashboard, user_dashboard, editar_producto
 from appWeb.views import calendario_admin, calendario_usuario, editar_disponibilidad, eliminar_disponibilidad
@@ -25,7 +25,12 @@ from django.conf.urls.static import static
 from django.conf import settings
 from appWeb.views import finalizar_compra,carrito_view,add_to_cart, decrement_from_cart, remove_from_cart, view_cart
 from appWeb.views import logout_view, ServicioCreateView, eliminar_servicio,get_total_price_view
-from appWeb.views import dias_disponibles
+from appWeb.views import dias_disponibles,get_product_total_view, editar_servicio
+
+from appWeb.views import editar_sobre_nosotros,preguntas_frecuentes
+    
+
+
 
 
 urlpatterns = [
@@ -41,11 +46,11 @@ urlpatterns = [
     path('sobre-nosotros/', sobre_nosotros, name='sobre_nosotros'),
     path('contacto/', contacto, name='contacto'),
 
+    path('confirmacion/', pagina_de_confirmacion, name='pagina_de_confirmacion'),
 
     path('finalizar_compra/',finalizar_compra,name='finalizar_compra'),
 
-    path('realizar-presupuesto/', realizar_presupuesto, name='realizar_presupuesto'),
-    path('presupuesto-exitoso/', presupuesto_exitoso, name='presupuesto_exitoso'),
+    path('enviar_presupuesto/', enviar_presupuesto, name='enviar_presupuesto'),
 
     path('calendario/usuario/', calendario_usuario, name='calendario_usuario'),
     path('calendario/admin/', calendario_admin, name='calendario_admin'),
@@ -68,8 +73,15 @@ urlpatterns = [
     path('eliminar_disponibilidad/',eliminar_disponibilidad,name='eliminar_disponibilidad'),
     path('carrito/',carrito_view,name='carrito'),
 
+    
+    
+    path('editar_sobre_nosotros/', editar_sobre_nosotros, name='editar_sobre_nosotros'),
+    path('preguntas_frecuentes/', preguntas_frecuentes, name='preguntas_frecuentes'),
 
 
+
+    path('editar_servicio/<int:servicio_id>/', editar_servicio, name='editar_servicio'),
+  
 
     path('add/<int:item_id>/<str:item_type>/', add_to_cart, name='add_to_cart'),
     path('decrement/<int:item_id>/<str:item_type>/', decrement_from_cart, name='decrement_from_cart'),
@@ -77,6 +89,10 @@ urlpatterns = [
     path('view_cart/', view_cart, name='view_cart'),
 
 
+
+
+    path('get_product_total/<int:item_id>/<str:item_type>/', get_product_total_view, name='get_product_total_view'),
+ 
 
 
 

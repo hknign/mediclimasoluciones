@@ -83,13 +83,13 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 300px; /* Ancho del carrito, ajusta según lo necesites */
-            height: 100%; /* Alto completo de la página */
+            width: 300px; 
+            height: 100%; 
             background-color: #fff;
             padding: 20px;
-            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda para destacarlo */
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); 
             z-index: 1000;
-            overflow-y: auto; /* Permite el desplazamiento si hay muchos productos */
+            overflow-y: auto; 
         }
 
         #carrito-popup .carrito-contenido {
@@ -108,7 +108,7 @@
         }
 
         .producto-carrito img {
-            max-width: 80px; /* Ajusta el tamaño de las imágenes */
+            max-width: 80px; 
             margin-right: 20px;
         }
 
@@ -134,7 +134,6 @@
             background-color: #218838;
         }
 
-        /* Botón para mostrar el carrito (si lo necesitas en el sitio) */
         #mostrar-carrito-btn {
             position: fixed;
             top: 20px;
@@ -332,30 +331,43 @@
     
     <nav>
         <ul>
-
             <li><a href="{% url 'index' %}">Inicio</a></li>
             <li>
                 {% if user.is_superuser %}
-                    <a href="{% url 'prueba' %}">Gestión Productos</a>
+                <a href="{% url 'prueba' %}">Gestión Productos</a>
                 {% else %}
-                    <a href="{% url 'productos' %}">Productos</a>
+                <a href="{% url 'productos' %}">Productos</a>
                 {% endif %}
             </li>
-            <li><a href="{% url 'servicios' %}">Servicios</a></li>
-            <li><a href="{% url 'sobre_nosotros' %}">Blog</a></li>
+
             <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'servicios' %}">Gestión Servicios</a>
+                {% else %}
+                    <a href="{% url 'servicios' %}">Servicios</a>
+                {% endif %}
+
+            </li>
+            <li>
+                {% if user.is_superuser %}
+                    <a href="{% url 'sobre_nosotros' %}">Gestión Blog</a>
+                {% else %}
+                    <a href="{% url 'sobre_nosotros' %}">Blog</a>
+                {% endif %}
                 
+            </li>
+            <li>
                 {% if user.is_superuser %}
                     <a href="{% url 'calendario_admin' %}">Gestión Horarios</a>
                 {% else %}
                     <a href="{% url 'calendario_usuario' %}">Horarios</a>
                 {% endif %}
-    
             </li>
             <li><a href="{% url 'contacto' %}">Contacto</a></li>
             
-            <!-- Botón para abrir el carrito -->
-            <button id="btn-carrito" onclick="mostrarCarrito()">Ver Carrito</button>
+            
+   
+
             <li>
                 <div class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">@{{ user.username }}</a>
@@ -469,7 +481,7 @@
                 const cookies = document.cookie.split(';');
                 for (let i = 0; i < cookies.length; i++) {
                     const cookie = cookies[i].trim();
-                    // Does this cookie string begin with the name we want?
+               
                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
@@ -507,11 +519,9 @@
         function guardarEstado() {
             const nuevoEstado = document.getElementById("nuevo-estado").value;
 
-            // Cambiar visualmente el estado
             diaSeleccionado.className = `day ${nuevoEstado}`;
 
-            // Convertir la fecha al formato YYYY-MM-DD
-            const fechaOriginal = diaSeleccionado.dataset.fecha; // Suponiendo que este es el formato '5 de febrero de 2024'
+            const fechaOriginal = diaSeleccionado.dataset.fecha; 
             const fecha = convertirFecha(fechaOriginal);
 
             fetch(`/editar_disponibilidad/${fecha}/`, {
