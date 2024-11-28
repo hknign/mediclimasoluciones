@@ -27,7 +27,7 @@ from appWeb.views import finalizar_compra,carrito_view,add_to_cart, decrement_fr
 from appWeb.views import logout_view, ServicioCreateView, eliminar_servicio,get_total_price_view
 from appWeb.views import dias_disponibles,get_product_total_view, editar_servicio
 
-from appWeb.views import editar_sobre_nosotros,preguntas_frecuentes
+from appWeb.views import editar_sobre_nosotros,preguntas_frecuentes,descargas_view
     
 
 
@@ -78,7 +78,7 @@ urlpatterns = [
     path('editar_sobre_nosotros/', editar_sobre_nosotros, name='editar_sobre_nosotros'),
     path('preguntas_frecuentes/', preguntas_frecuentes, name='preguntas_frecuentes'),
 
-
+    path('descargas/',descargas_view,name='descargas'),
 
     path('editar_servicio/<int:servicio_id>/', editar_servicio, name='editar_servicio'),
   

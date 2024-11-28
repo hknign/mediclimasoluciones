@@ -532,3 +532,7 @@ def preguntas_frecuentes(request):
 
     preguntas = Pregunta.objects.all()
     return render(request, 'preguntas_frecuentes.html', {'form': form, 'preguntas': preguntas})
+
+
+def descargas_view(request):
+    return render(request, 'descargas.html')

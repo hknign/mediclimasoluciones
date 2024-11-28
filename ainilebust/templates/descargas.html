@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #f5f5f5, #e0e0e0);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+        }
+
+        .downloads-container {
+            text-align: center;
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .download-link {
+            display: block;
+            margin: 20px 0;
+            padding: 15px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-link:hover {
+            background-color: #0056b3;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h5 {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="downloads-container">
+        <h2>Configuraciones</h2>
+        <h5>Este panel permite el alcance de entregar el manual de usuario para que usted pueda utilizar de buena manera la página.</h5>
+        {% if user.is_superuser %}
+            <a href="{% static 'archivos/Manual_de_Administrador.pptx' %}" class="download-link">Descargar Manual de Administrador</a>
+        {% else %}
+            <a href="{% static 'archivos/Manual_de_Usuario.pptx' %}" class="download-link">Descargar Manual de Usuario</a>
+        {% endif %}
+        <a href="{% url 'index' %}" class="btn-back">Volver al inicio</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
